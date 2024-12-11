@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" th:href="@{/manager/easyui/themes/default/easyui.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/manager/easyui/themes/icon.css}">
+    <script type="text/javascript" th:src="@{/manager/easyui/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/manager/easyui/jquery.easyui.min.js}"></script>
+    <script type="text/javascript">
+        $(function(){
+            //工具栏
+            var toolbar = [{
+                text: '修改',
+                iconCls: 'icon-edit',
+                handler: function () { alert('edit')}
+            }, '-', {
+                text: '启用',
+                iconCls: 'icon-ok',
+                handler: function () { alert('ok') }
+            }, '-', {
+                text: '禁用',
+                iconCls: 'icon-cancel',
+                handler: function () { alert('cancel') }
+            }];
+            $(function(){
+                $("#tab").datagrid({
+                    title:"用户列表",
+                    iconCls:'icon-save',
+                    url:"/manager/myuser/findAll",
+                    columns:[
+                        [
+                        {field:'id',title:'ID',width:200,align:'center'},
+                        {field:'username',title:'用户名称',width:100,align:'center'},
+                        {field:'password',title:'密码',width:200,align:'center'},
+                        {field:'status',title:'状态',width:200,align:'center',formatter:statusformat}
+                    ]
+                    ],
+                    pagination:true,
+                    singleSelect:true,
+                    toolbar:"#tb"
+                });
+            });
+            function statusformat(val,row){
+                var str = "";
+                if(1==val){
+                    str = "注册通过";
+                }else{
+                    str = "注册未通过";
+                }
+
+                return str;
+            }
+
+        });
+    </script>
+</head>
+
+<body>
+<table id="tab"></table>
+</body>
+</html>
