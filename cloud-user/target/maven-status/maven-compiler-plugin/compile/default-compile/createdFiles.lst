@@ -1,7 +1,0 @@
-com\itany\service\impl\TestServiceImpl.class
-com\itany\CloudUserMain.class
-com\itany\config\TestMvcConfig.class
-com\itany\controller\TestController.class
-com\itany\service\ITestService.class
-com\itany\config\OtherConfig.class
-com\itany\dao\ITestDao.class
