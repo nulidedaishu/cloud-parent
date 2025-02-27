@@ -1,65 +1,50 @@
 package com.itany.entity;
 
+import com.itany.vo.UserStats;
+
 import java.util.Date;
 
 public class ServerCompany {
     private static final long serialVersionUID = 1L;
 
-//    private User user;
-//    private MemberCompany memberCompany;
-//    private Member member;
-//    private UserStats userStats;
-//
-//    public UserStats getUserStats() {
-//        return userStats;
-//    }
-//
-//    public void setUserStats(UserStats userStats) {
-//        this.userStats = userStats;
-//    }
-//
-//    public ServerCompany(User user, MemberCompany memberCompany, Member member, UserStats userStats, Integer id, String name, String info, String address, String gps, String scale, Date createdate, Date joindate, Integer flag, Integer type, String linkman, String phone) {
-//        this.user = user;
-//        this.memberCompany = memberCompany;
-//        this.member = member;
-//        this.userStats = userStats;
-//        this.id = id;
-//        this.name = name;
-//        this.info = info;
-//        this.address = address;
-//        this.gps = gps;
-//        this.scale = scale;
-//        this.createdate = createdate;
-//        this.joindate = joindate;
-//        this.flag = flag;
-//        this.type = type;
-//        this.linkman = linkman;
-//        this.phone = phone;
-//    }
+    private User user;
+    private MemberCompany memberCompany;
+    private Member member;
+    private UserStats userStats;
 
-//    public User getUser() {
-//        return user;
-//    }
-//
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-//
-//    public MemberCompany getMemberCompany() {
-//        return memberCompany;
-//    }
-//
-//    public void setMemberCompany(MemberCompany memberCompany) {
-//        this.memberCompany = memberCompany;
-//    }
-//
-//    public Member getMember() {
-//        return member;
-//    }
-//
-//    public void setMember(Member member) {
-//        this.member = member;
-//    }
+    public UserStats getUserStats() {
+        return userStats;
+    }
+
+    public void setUserStats(UserStats userStats) {
+        this.userStats = userStats;
+    }
+
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public MemberCompany getMemberCompany() {
+        return memberCompany;
+    }
+
+    public void setMemberCompany(MemberCompany memberCompany) {
+        this.memberCompany = memberCompany;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 
     @Override
     public String toString() {
