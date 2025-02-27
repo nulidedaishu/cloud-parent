@@ -10,7 +10,9 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.DispatcherServlet;
 
-@SpringBootApplication(exclude = {MultipartAutoConfiguration.class,SolrAutoConfiguration.class})
+import java.math.BigDecimal;
+
+@SpringBootApplication(exclude = {MultipartAutoConfiguration.class, SolrAutoConfiguration.class})
 public class ManagerWebApplication {
 
     public static void main(String[] args) {
@@ -25,10 +27,8 @@ public class ManagerWebApplication {
     }
 
 
-
     @Bean(name = "multipartResolver")
-    public MultipartResolver multipartResolver()
-    {
+    public MultipartResolver multipartResolver() {
         CommonsMultipartResolver resolver = new CommonsMultipartResolver();
         resolver.setDefaultEncoding("UTF-8");
         resolver.setResolveLazily(true);//延迟文件解析,以便在controller中捕捉异常

@@ -1,61 +1,250 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <title>前台用户列表</title>
     <link rel="stylesheet" type="text/css" th:href="@{/manager/easyui/themes/default/easyui.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/manager/easyui/themes/icon.css}">
     <script type="text/javascript" th:src="@{/manager/easyui/jquery.min.js}"></script>
     <script type="text/javascript" th:src="@{/manager/easyui/jquery.easyui.min.js}"></script>
     <script type="text/javascript">
-        $(function(){
-            //工具栏
-            var toolbar = [{
-                text: '修改',
-                iconCls: 'icon-edit',
-                handler: function () { alert('edit')}
-            }, '-', {
-                text: '启用',
-                iconCls: 'icon-ok',
-                handler: function () { alert('ok') }
-            }, '-', {
-                text: '禁用',
-                iconCls: 'icon-cancel',
-                handler: function () { alert('cancel') }
-            }];
-            $(function(){
-                $("#tab").datagrid({
-                    title:"用户列表",
-                    iconCls:'icon-save',
-                    url:"/manager/myuser/findAll",
-                    columns:[
-                        [
-                        {field:'id',title:'ID',width:200,align:'center'},
-                        {field:'username',title:'用户名称',width:100,align:'center'},
-                        {field:'password',title:'密码',width:200,align:'center'},
-                        {field:'status',title:'状态',width:200,align:'center',formatter:statusformat}
+        $(function () {
+            $('#userlist').datagrid({
+                title: '前台用户列表',
+                iconCls: 'icon-save',
+                url: '/manager/userList/selectUser',
+                method: 'get',
+                // queryParams: {
+                //     page: 1,
+                //     rows: 10
+                // },
+                columns: [
+                    [
+                        {field: 'id', title: 'ID', width: 50, hidden: true},  <!-- Hidden ID -->
+                        {field: 'name', title: '姓名', width: 100, align: 'center'},
+                        {field: 'phone', title: '电话', width: 100, align: 'center'},
+                        {field: 'wechat', title: '微信号', width: 100, align: 'center'},
+                        {field: 'qq', title: 'QQ', width: 200, align: 'center'},
+                        {
+                            field: 'serverCompanyName',
+                            title: '所属服务商',
+                            width: 150,
+                            align: 'center',
+                            formatter: function (value, row) {
+                                return row.serverCompany ? row.serverCompany.name : '';
+                            }
+                        },
+                        {
+                            field: 'serverCompanyType',
+                            title: '服务商类型',
+                            width: 100,
+                            align: 'center',
+                            formatter: function (value, row) {
+                                if (row.serverCompany && row.serverCompany.type !== undefined) {
+                                    switch (row.serverCompany.type) {
+                                        case 1:
+                                            return "生活";
+                                        case 2:
+                                            return "商务";
+                                        default:
+                                            return "普通用户";
+                                    }
+                                } else {
+                                    return "普通用户";
+                                }
+                            }
+                        },
+                        {field: 'flag', title: '状态', width: 100, align: 'center'},
+                        {
+                            field: 'cz', title: '操作', width: 150, align: 'center', formatter: function (val, row) {
+                                return "<a href='javascript:showDg();'>查看</a>";
+                            }
+                        }
                     ]
-                    ],
-                    pagination:true,
-                    singleSelect:true,
-                    toolbar:"#tb"
-                });
-            });
-            function statusformat(val,row){
-                var str = "";
-                if(1==val){
-                    str = "注册通过";
-                }else{
-                    str = "注册未通过";
+                ],
+                toolbar: "#tooldiv",
+                pagination: true,
+                singleSelect: true,
+                onLoadSuccess: function (data) {
+                    console.log("数据加载成功:", data);
                 }
+            });
 
-                return str;
-            }
+            $('#dg').dialog({
+                title: '用户详情',
+                width: 700,
+                height: 700,
+                closed: true,
+                cache: false,
+                modal: true,
+                iconCls: 'icon-save'
+            });
 
+
+            $("#submit_search").linkbutton({iconCls: 'icon-search', plain: true})
+                .click(function () {
+                    var name = $("input[name='name']").val();
+                    var phone = $("input[name='phone']").val();
+                    var wechat = $("input[name='wechat']").val();
+                    var qq = $("input[name='qq']").val();
+                    var userType = $('#userTypeSelect').val();
+                    console.log("类型" + userType);
+                    $('#userlist').datagrid('load', {
+                        page: 1,
+                        rows: 10,
+                        name: name,
+                        phone: phone,
+                        wechat: wechat,
+                        qq: qq,
+                        userType: userType
+                    });
+                });
         });
+
+        function showDg() {
+            var selectedUser = $('#userlist').datagrid('getSelected');
+            if (selectedUser) {
+                $.ajax({
+                    url: '/manager/userList/selectUserById',
+                    method: 'GET',
+                    data: {id: selectedUser.id},
+                    success: function (data) {
+                        console.log(data); // 输出获取的 data
+                        console.log('name:' + data.user.name); // 输出 name
+
+                        // 填充数据到弹出框
+                        var user = data.user;
+                        var serverCompany = user.serverCompany;
+
+                        // 填充用户详情
+                        $("input[name='usernameDg']").val(user.name);  // 姓名
+                        $("input[name='nicknameDg']").val(user.nickname);  // 昵称
+                        $("input[name='phoneDg']").val(user.phone);  // 电话
+                        $("input[name='wechatDg']").val(user.wechat);  // 微信号
+                        $("input[name='qqDg']").val(user.qq);  // QQ
+                        $("input[name='serverCompanyNameDg']").val(serverCompany ? serverCompany.name : '');  // 服务商名称
+                        $("input[name='serverCompanyTypeDg']").val(serverCompany ? (serverCompany.type === 1 ? '生活' : serverCompany.type === 2 ? '商务' : '普通用户') : '');  // 服务商类型
+                        $("input[name='sexDg']").val(user.sex === 1 ? '男' : '女');  // 性别
+                        $("input[name='createdateDg']").val(user.createdate);  // 注册时间
+                        $("input[name='flagDg']").val(user.flag === 1 ? '启用' : '禁用');  // 用户状态
+
+                        // 设置头像
+                        $("img").attr("src", "/path/to/images/" + user.headimg);  // 头像路径, 假设头像存储在服务器指定路径下
+
+                        // 打开弹出框
+                        $('#dg').dialog("open");
+                    },
+                    error: function () {
+                        alert('获取用户详情失败');
+                    }
+                });
+            } else {
+                alert('请先选择一个用户');
+            }
+        }
+
+        // 启用用户
+        function enableUser() {
+            var selectedUser = $('#userlist').datagrid('getSelected');
+            if (selectedUser) {
+                $.ajax({
+                    url: '/manager/userList/updateUserFlag1',
+                    method: 'POST',
+                    data: {id: selectedUser.id},
+                    success: function (response) {
+                        $('#userlist').datagrid('reload');
+                    },
+                    error: function () {
+                        alert('启用失败');
+                    }
+                });
+            } else {
+                alert('请先选择一个用户');
+            }
+        }
+
+        // 禁用用户
+        function disableUser() {
+            var selectedUser = $('#userlist').datagrid('getSelected');
+            if (selectedUser) {
+                $.ajax({
+                    url: '/manager/userList/updateUserFlag0',
+                    method: 'POST',
+                    data: {id: selectedUser.id},
+                    success: function (response) {
+                        $('#userlist').datagrid('reload');
+                    },
+                    error: function () {
+                        alert('禁用失败');
+                    }
+                });
+            } else {
+                alert('请先选择一个用户');
+            }
+        }
     </script>
 </head>
-
 <body>
-<table id="tab"></table>
+<div id="tooldiv">
+    <input type="text" placeholder="请输入查询用户名" name="name"/>
+    <input type="text" placeholder="请输入查询电话" name="phone"/>
+    <input type="text" placeholder="请输入查询微信" name="wechat"/>
+    <input type="text" placeholder="请输入查询QQ" name="qq"/>
+    <select id="userTypeSelect">
+        <option value="">请选用户类型</option>
+        <option value="0">普通用户</option>
+        <option value="1">生活服务商</option>
+        <option value="2">商务服务商</option>
+    </select>
+    <a id="submit_search">搜索</a>
+    <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-remove'"
+       onclick="disableUser()">禁用</a>
+    <a href="javascript:void(0);" class="easyui-linkbutton" data-options="iconCls:'icon-add'"
+       onclick="enableUser()">启用</a>
+</div>
+<table id="userlist"></table>
+<div id="dg">
+    <div align="center" style="margin-top: 30px">
+        <div style="margin-bottom:20px">
+            <img src="" alt="" style="width: 150px; height:150px;"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%" data-options="label:'姓名:'" name="usernameDg"
+                   readonly="true"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%" data-options="label:'昵称:'" name="nicknameDg"
+                   readonly="true"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%" data-options="label:'电话:'" name="phoneDg" readonly="true"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'微信号:'" name="wechatDg"
+                   readonly="true"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'QQ:'" name="qqDg" readonly="true"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'所属服务商:'" name="serverCompanyNameDg"
+                   readonly="true"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'服务商类型:'" name="serverCompanyTypeDg"
+                   readonly="true"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'性别:'" name="sexDg" readonly="true"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'注册时间:'" name="createdateDg"
+                   readonly="true"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'状态:'" name="flagDg" readonly="true"/>
+        </div>
+    </div>
+</div>
 </body>
 </html>

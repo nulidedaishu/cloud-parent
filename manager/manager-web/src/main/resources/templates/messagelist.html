@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>前台留言列表</title>
+    <link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
+    <script type="text/javascript" src="easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+	<script type="text/javascript">
+	   $(function(){
+	       $('#messagelist').datagrid({  
+            				title:'前台留言列表',  
+            				iconCls:'icon-save',
+            				data:{
+                                "total":10,
+                                "rows":[
+                                    {"name":"马大哥","phone":"123123123","commpany":"全能家政公司","createdate":"2021-12-1","area":"鼓楼区"},
+                                    {"name":"宫大妈","phone":"123123123","commpany":"全能家政公司","createdate":"2021-12-1","area":"玄武区"},
+                                    {"name":"叶大爷","phone":"123123123","commpany":"全能家政公司","createdate":"2021-12-1","area":"栖霞区"},
+                                    {"name":"丁大爷","phone":"123123123","commpany":"全能家政公司","createdate":"2021-12-1","area":"秦淮区"},
+                                    {"name":"宫大爷","phone":"123123123","commpany":"全能家政公司","createdate":"2021-12-1","area":"建业区"},
+                                    {"name":"王大爷","phone":"123123123","commpany":"全能家政公司","createdate":"2021-12-1","area":"鼓楼区"}
+                                ]
+                            },  
+            				columns:[[  
+            					                 {field:'name',title: '留言人称呼',width:200,align:'center'},  
+            					                 {field:'phone',title:'留言电话',width:200,align:'center'},  
+            					                 {field:'area',title:'意向范围',width:200,align:'center'},
+                                       {field:'commpany',title:'留言服务商',width:200,align:'center'},
+                                       {field:'createdate',title:'留言日期',width:200,align:'center'},
+                                       {field:'cz',title:'操作',width:200,align:'center',formatter:function(val,row){
+                                             return "<a href='javascript:showDg();'>查看留言</a>";
+                                       }}
+                                ]],  
+            				toolbar: "#tooldiv",  
+            				pagination: true,
+            				singleSelect:true
+            			});
+
+
+          
+          //初始化修改窗口  
+         $('#dg').dialog({
+			    title: '留言详情',
+			    width: 500,
+			    height: 500,
+			    closed: true,
+			    cache: false,
+			    modal: true,
+			    iconCls: 'icon-save'
+			});
+
+         //初始化查询按钮
+         $("#submit_search").linkbutton({ iconCls: 'icon-search', plain: true })
+            .click(function () {
+                 alert("开始查询");
+            });
+            
+	   });
+
+        //查询弹出方法
+       function showDg(){
+             $('#dg').dialog("open");
+       }
+	</script>
+</head>
+<body>
+  <div id="tooldiv">
+      <input type="text"  placeholder="请输入查询用户名"/>
+      <input type="text"  placeholder="请输入查询电话"/>
+      <a id="submit_search">搜索</a>
+  </div>
+  <table id="messagelist"></table>
+    <div id="dg">
+           <div align="center" style="margin-top: 30px">
+            <div style="margin-bottom:20px">
+                百姓网成立于2005年3月，是国内领先的分类信息生态服务商，是中国互联网轻资产模式的典范。
+                百姓网致力于创造以分类信息业务为平台、多条垂直业务线布局的生态圈。
+                为用户提供涵盖生活服务、招聘求职、房屋租售、二手车买卖、二手交易、教育培训、同城交友等一站式本地生活服务信息平台，
+                同时为中小微商户建立全方位的精准营销解决方案。
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -46,8 +46,9 @@ public class TestMvcConfig implements WebMvcConfigurer {
     }
 
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/showlist").setViewName("userlist");
-        registry.addViewController("/showdt").setViewName("map");
+        registry.addViewController("/showList").setViewName("index");
+        registry.addViewController("/showdt").setViewName("");
+        registry.addViewController("/showLogin").setViewName("login");
     }
 
 

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>生活加盟商列表</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/manager/easyui/themes/default/easyui.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/manager/easyui/themes/icon.css}">
+    <script type="text/javascript" th:src="@{/manager/easyui/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/manager/easyui/jquery.easyui.min.js}"></script>
+    <script type="text/javascript">
+        $(function () {
+            //初始化生活加盟商列表
+            $('#commpanylist').datagrid({
+                title: '生活加盟商列表',
+                iconCls: 'icon-save',
+                url: '/manager/serverLife/selectAll',
+                method: 'get',
+                columns: [
+                    [
+                        {field: 'name', title: '服务商名称', width: 200, align: 'center'},
+                        {
+                            field: 'address',
+                            title: '公司地址',
+                            width: 200,
+                            align: 'center',
+                            formatter: function (val, row) {
+                                return `<a href="commpanymap.html?gps=${row.gps}" target="_blank">${val}</a>`;
+                            }
+                        },
+                        {field: 'linkman', title: '联系人', width: 100, align: 'center'},
+                        {field: 'phone', title: '公司电话', width: 100, align: 'center'},
+                        {field: 'zzh', title: '平台子账号', width: 100, align: 'center'},
+                        {
+                            field: 'commpanylevel',
+                            title: '服务商等级',
+                            width: 100,
+                            align: 'center',
+                            formatter: function (val) {
+                                return val ? `VIP${val}` : '-';
+                            }
+                        },
+                        {field: 'joindate', title: '入驻时间', width: 100, align: 'center'},
+                        {
+                            field: 'flag',
+                            title: '状态',
+                            width: 100,
+                            align: 'center',
+                            formatter: function (val) {
+                                return val === 1 ? '启用' : '禁用';
+                            }
+                        },
+                        {
+                            field: 'cz',
+                            title: '操作',
+                            width: 200,
+                            align: 'center',
+                            formatter: function (val, row) {
+                                return "<a href='javascript:showDg();'>查看</a>";
+                            }
+                        }
+                    ]
+                ],
+                toolbar: "#tooldiv",
+                pagination: true,
+                singleSelect: true
+            });
+
+            //初始化子账号列表初始化
+            $('#subaccountlist').datagrid({
+                columns: [
+                    [
+                        {field: 'name', title: '姓名', width: 100, align: 'center'},
+                        {field: 'phone', title: '电话', width: 100, align: 'center'},
+                        {field: 'wechat', title: '微信号', width: 100, align: 'center'},
+                        {field: 'qq', title: 'QQ', width: 100, align: 'center'},
+                        {field: 'flag', title: '状态', width: 100, align: 'center'},
+                        {
+                            field: 'cz', title: '操作', width: 100, align: 'center', formatter: function (val, row) {
+                                return "<a href='javascript:alert();'>解除关联</a>";
+                            }
+                        }
+                    ]
+                ],
+                pagination: false,
+                singleSelect: true
+            });
+
+
+            //初始化修改窗口
+            $('#dg').dialog({
+                title: '服务商详情',
+                width: 700,
+                height: 700,
+                closed: true,
+                cache: false,
+                modal: true,
+                iconCls: 'icon-save'
+            });
+
+            $("#editdg").dialog({
+                title: '服务商修改',
+                width: 700,
+                height: 700,
+                closed: true,
+                cache: false,
+                modal: true,
+                iconCls: 'icon-save'
+            });
+
+
+            $("#subaccountdg").dialog({
+                title: '子账户展示',
+                width: 800,
+                height: 600,
+                closed: true,
+                cache: false,
+                modal: true,
+                iconCls: 'icon-save'
+            });
+
+            //初始化查询按钮
+            $("#submit_search").linkbutton({iconCls: 'icon-search', plain: true})
+                .click(function () {
+                    alert("开始查询");
+                });
+
+        });
+
+        //查询弹出方法
+        function showDg() {
+            $('#dg').dialog("open");
+        }
+
+        //打开修改界面方法
+        function openeditdg() {
+            $('#editdg').dialog('open');
+        }
+
+        //打开子账号展示界面方法
+        function opensubaccountdg() {
+            $('#subaccountdg').dialog('open');
+        }
+    </script>
+</head>
+<body>
+<div id="tooldiv">
+    <input type="text" placeholder="请输入查询服务商名"/>
+    <input type="text" placeholder="请输入查询服务商电话"/>
+    <select>
+        <option value="">请选服务商等级</option>
+        <option value="VIP体验">VIP体验</option>
+        <option value="初级VIP">初级VIP</option>
+        <option value="中级VIP">中级VIP</option>
+        <option value="高级VIP">高级VIP</option>
+    </select>
+    <select>
+        <option value="">请选状态</option>
+        <option value="1">启用</option>
+        <option value="0">禁用</option>
+    </select>
+    <a id="submit_search">搜索</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="openeditdg()">修改</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="opensubaccountdg()">子账户维护</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-remove'">禁用</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-add'">启用</a>
+</div>
+<table id="commpanylist"></table>
+<!--服务商详情展示界面-->
+<div id="dg">
+    <div align="center" style="margin-top: 30px">
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%" data-options="label:'服务商名称:'" readonly="true"
+                   value="安普惠融资担保有限公司"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%" data-options="label:'公司地址:'" readonly="true"
+                   value="南京市鼓楼区xxxxxx"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%" data-options="label:'公司电话:'" readonly="true"
+                   value="123456123"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'联系人:'" readonly="true" value="谢老板"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'规模:'" readonly="true" value="100人以上"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'平台子账号:'" readonly="true" value="3"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'服务商类型:'" readonly="true"
+                   value="VIP1"/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'注册时间:'" readonly="true"
+                   value="2021-1-1"/>
+        </div>
+        <div style="margin-bottom:20px">
+                <textarea cols="80" rows="5" readonly="true" style="border: 0px;">
+ 百姓网成立于2005年3月，是国内领先的分类信息生态服务商，是中国互联网轻资产模式的典范百姓网致力于创造以分类信息业务为平台、多条垂直业务线布局的生态圈为用户提供涵生活服务、招聘求职、房屋租售、二手车买卖、二手交易、教育培训、同城交友等一站式本地生活服务信息平台，同时为中小微商户建立全方位的精准营销解决方案。
+                </textarea>
+        </div>
+        <div class="imgtab">
+            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">
+            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">
+            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">
+            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">
+            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">
+
+        </div>
+    </div>
+</div>
+<!--服务商信息修改界面-->
+<div id="editdg">
+    <div align="center" style="margin-top: 30px">
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%" data-options="label:'服务商名称:'" value=""/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%" data-options="label:'公司地址:'" value=""/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%" data-options="label:'公司电话:'" value=""/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'联系人:'" value=""/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'规模:'" value=""/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'服务商类型:'" value=""/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'注册时间:'" value=""/>
+        </div>
+        <div style="margin-bottom:20px">
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'GPS坐标:'" value=""/>
+        </div>
+        <div style="margin-bottom:20px">
+            <textarea cols="80" rows="5"></textarea>
+        </div>
+        <div style="margin-bottom:20px">
+            <input type="file" multiple="multiple"/>
+        </div>
+    </div>
+</div>
+<!--子账号展示界面-->
+<div id="subaccountdg">
+    <table id="subaccountlist"></table>
+</div>
+</body>
+</html>

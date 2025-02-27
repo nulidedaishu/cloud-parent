@@ -3,7 +3,6 @@ package com.itany.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.itany.dao.ITestDao;
-import com.itany.entity.User;
 import com.itany.service.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
