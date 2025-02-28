@@ -444,6 +444,9 @@
         AND #{currentDate} BETWEEN mc.startdate AND mc.enddate
         LEFT JOIN t_member m ON mc.memberid = m.id
         <where>
+            <if test="id != null">
+                AND c.id = #{id},
+            </if>
             <if test="name != null and name != ''">
                 AND c.name LIKE CONCAT('%', #{name}, '%')
             </if>
@@ -451,7 +454,7 @@
                 AND c.phone = #{phone}
             </if>
             <if test="level != null and level !=''">
-                AND m.level = #{level}  -- 如果要根据会员等级筛选
+                AND m.level = #{level} -- 如果要根据会员等级筛选
             </if>
             <if test="flag != null">
                 AND c.flag = #{flag}
@@ -462,5 +465,17 @@
         </where>
         GROUP BY c.id
     </select>
+
+    <update id="updateServerCompanyFlag0">
+        UPDATE t_server_commpany
+        SET flag = 0
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateServerCompanyFlag1">
+        UPDATE t_server_commpany
+        SET flag = 1
+        WHERE id = #{id}
+    </update>
 
 </mapper>

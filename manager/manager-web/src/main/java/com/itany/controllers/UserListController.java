@@ -34,7 +34,7 @@ public class UserListController {
         return "userlist";
     }
 
-    @GetMapping("/selectUser")
+    @RequestMapping("/selectUser")
     @ResponseBody
     public Map<String, Object> getUserList(
             @RequestParam(defaultValue = DictConstant.USER_DEFAULT_NO) String page,
@@ -54,7 +54,7 @@ public class UserListController {
 
     }
 
-    @GetMapping("/selectUserById")
+    @RequestMapping("/selectUserById")
     @ResponseBody
     public Map<String, Object> selectUserById(String id) {
         Map<String, Object> result = new HashMap<>();

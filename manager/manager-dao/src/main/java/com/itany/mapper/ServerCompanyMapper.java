@@ -99,6 +99,7 @@ public interface ServerCompanyMapper {
 
 
     List<ServerCompany> selectServerCompanyWithUsersAndMembers(
+            @Param("id") Integer id,
             @Param("name") String name,
             @Param("phone") String phone,
             @Param("flag") Integer flag,
@@ -106,6 +107,10 @@ public interface ServerCompanyMapper {
             @Param("level") String level,
             @Param("currentDate") Date currentDate
     );
+
+    void updateServerCompanyFlag0(Integer id);
+
+    void updateServerCompanyFlag1(Integer id);
 
 
 }

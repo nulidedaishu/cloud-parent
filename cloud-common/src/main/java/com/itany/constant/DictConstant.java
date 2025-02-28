@@ -7,4 +7,5 @@ public interface DictConstant {
    String SERVERCOMPANYLIFE_DEFAULT_PAGE="10";
 
    Integer SERVER_LIFE=1;
+   Integer SERVER_COMMERCE=2;
 }

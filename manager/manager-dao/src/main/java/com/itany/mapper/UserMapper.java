@@ -96,7 +96,7 @@ public interface UserMapper {
 
     List<User> selectUsersWithCompany(@Param("user")User user,@Param("userType")Integer userType);
 
-    void updateUserFlag0(String id);
+    void updateUserFlag0(Integer id);
 
-    void updateUserFlag1(String id);
+    void updateUserFlag1(Integer id);
 }

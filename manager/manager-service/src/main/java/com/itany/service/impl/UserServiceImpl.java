@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         if (ParameterUtil.isNull(id)) {
             throw new RequestParameterErrorException("请求参数有误");
         }
-        userMapper.updateUserFlag0(id);
+        userMapper.updateUserFlag0(Integer.parseInt(id));
     }
 
     @Override
@@ -64,7 +64,6 @@ public class UserServiceImpl implements UserService {
         if (ParameterUtil.isNull(id)) {
             throw new RequestParameterErrorException("请求参数有误");
         }
-        userMapper.updateUserFlag1(id);
+        userMapper.updateUserFlag1(Integer.parseInt(id));
     }
-
 }

@@ -13,10 +13,11 @@
             $('#commpanylist').datagrid({
                 title: '生活加盟商列表',
                 iconCls: 'icon-save',
-                url: '/manager/serverLife/selectAll',
+                url: '/manager/serverCompany/selectAllLife',
                 method: 'get',
                 columns: [
                     [
+                        {field: 'id', title: 'ID', width: 50, hidden: true},
                         {field: 'name', title: '服务商名称', width: 200, align: 'center'},
                         {
                             field: 'address',
@@ -28,18 +29,26 @@
                             }
                         },
                         {field: 'linkman', title: '联系人', width: 100, align: 'center'},
-                        {field: 'phone', title: '公司电话', width: 100, align: 'center'},
-                        {field: 'zzh', title: '平台子账号', width: 100, align: 'center'},
+                        {field: 'phone', title: '公司电话', width: 200, align: 'center'},
+                        {
+                            field: 'zzh',
+                            title: '平台子账号',
+                            width: 100,
+                            align: 'center',
+                            formatter: function (value, row) {
+                                return row.userStats ? row.userStats.count : '0';
+                            }
+                        },
                         {
                             field: 'commpanylevel',
                             title: '服务商等级',
                             width: 100,
                             align: 'center',
-                            formatter: function (val) {
-                                return val ? `VIP${val}` : '-';
+                            formatter: function (value, row) {
+                                return row.member ? row.member.level : '-';
                             }
                         },
-                        {field: 'joindate', title: '入驻时间', width: 100, align: 'center'},
+                        {field: 'joindate', title: '入驻时间', width: 200, align: 'center'},
                         {
                             field: 'flag',
                             title: '状态',
@@ -52,10 +61,10 @@
                         {
                             field: 'cz',
                             title: '操作',
-                            width: 200,
+                            width: 100,
                             align: 'center',
                             formatter: function (val, row) {
-                                return "<a href='javascript:showDg();'>查看</a>";
+                                return `<a href="javascript:showDg('${row.id}');">查看</a>`;
                             }
                         }
                     ]
@@ -121,14 +130,28 @@
             //初始化查询按钮
             $("#submit_search").linkbutton({iconCls: 'icon-search', plain: true})
                 .click(function () {
-                    alert("开始查询");
+                    $('#commpanylist').datagrid('load', {
+                        name: $('#searchName').val(),
+                        phone: $('#searchPhone').val(),
+                        level: $('#searchLevel').val(),
+                        flag: $('#searchStatus').val()
+                    });
                 });
-
         });
 
         //查询弹出方法
-        function showDg() {
+        function showDg(id) {
             $('#dg').dialog("open");
+            // 根据 ID 请求详情数据
+            $.get('/manager/serverCompany/showDetail', {id: id}, function (data) {
+                $('#dg').find('input.easyui-textbox').each(function () {
+                    var field = $(this).data('options').label.replace(':', '');
+                    $(this).textbox('setValue', data[field] || '');
+                });
+                // 处理文本域和图片
+                $('#dg textarea').val(data.info);
+                $('.imgtab').html(data.images.map(img => `<img src="${img.url}">`).join(''));
+            });
         }
 
         //打开修改界面方法
@@ -139,21 +162,68 @@
         //打开子账号展示界面方法
         function opensubaccountdg() {
             $('#subaccountdg').dialog('open');
+            const row = $('#commpanylist').datagrid('getSelected');
+            if (row) {
+                $('#subaccountlist').datagrid({
+                    url: '/manager/serverCompany/showUserList',
+                    queryParams: {companyId: row.id}
+                });
+            }
+        }
+
+        // 禁用服务商
+        function disableCompany() {
+            const row = $('#commpanylist').datagrid('getSelected');
+            if (row && row.id) {
+                $.ajax({
+                    url: '/manager/serverCompany/updateServerCompanyFlag0',
+                    method: 'POST',
+                    data: {id: row.id},
+                    success: function (response) {
+                        $('#commpanylist').datagrid('reload');
+                    },
+                    error: function () {
+                        alert('禁用失败');
+                    }
+                });
+            } else {
+                alert('请先选择一个服务商');
+            }
+        }
+
+        // 启用服务商
+        function enableCompany() {
+            const row = $('#commpanylist').datagrid('getSelected');
+            if (row && row.id) {
+                $.ajax({
+                    url: '/manager/serverCompany/updateServerCompanyFlag1',
+                    method: 'POST',
+                    data: {id: row.id},
+                    success: function (response) {
+                        $('#commpanylist').datagrid('reload');
+                    },
+                    error: function () {
+                        alert('启用失败');
+                    }
+                });
+            } else {
+                alert('请先选择一个服务商');
+            }
         }
     </script>
 </head>
 <body>
 <div id="tooldiv">
-    <input type="text" placeholder="请输入查询服务商名"/>
-    <input type="text" placeholder="请输入查询服务商电话"/>
-    <select>
+    <input id="searchName" type="text" placeholder="请输入服务商名称"/>
+    <input id="searchPhone" type="text" placeholder="请输入服务商电话"/>
+    <select id="searchLevel">
         <option value="">请选服务商等级</option>
         <option value="VIP体验">VIP体验</option>
         <option value="初级VIP">初级VIP</option>
         <option value="中级VIP">中级VIP</option>
         <option value="高级VIP">高级VIP</option>
     </select>
-    <select>
+    <select id="searchStatus">
         <option value="">请选状态</option>
         <option value="1">启用</option>
         <option value="0">禁用</option>
@@ -161,8 +231,8 @@
     <a id="submit_search">搜索</a>
     <a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="openeditdg()">修改</a>
     <a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="opensubaccountdg()">子账户维护</a>
-    <a class="easyui-linkbutton" data-options="iconCls:'icon-remove'">禁用</a>
-    <a class="easyui-linkbutton" data-options="iconCls:'icon-add'">启用</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="disableCompany()">禁用</a>
+    <a class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="enableCompany()">启用</a>
 </div>
 <table id="commpanylist"></table>
 <!--服务商详情展示界面-->

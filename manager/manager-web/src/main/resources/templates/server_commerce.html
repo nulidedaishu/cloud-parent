@@ -1,66 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>商务加盟商列表</title>
-    <link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css">
-    <link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
-    <script type="text/javascript" src="easyui/jquery.min.js"></script>
-    <script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
-	  <script type="text/javascript">
+    <link rel="stylesheet" type="text/css" th:href="@{/manager/easyui/themes/default/easyui.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/manager/easyui/themes/icon.css}">
+    <script type="text/javascript" th:src="@{/manager/easyui/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/manager/easyui/jquery.easyui.min.js}"></script>
+    <script type="text/javascript">
 	   $(function(){
          //初始化商务加盟商列表
 	       $('#commpanylist').datagrid({  
     				title:'商务加盟商列表',  
     				iconCls:'icon-save',
-    				data:{
-                        "total":10,
-                        "rows":[
-                             {"name":"安普惠融资担保有限公司","address":"南京市鼓楼区xxxxxx","linkman":"谢老板","phone":"123123123"
-                             ,"zzh":"3","commpanylevel":"VIP1","flag":"启用","joindate":"2022-1-1"},
-                             {"name":"安普惠融资担保有限公司","address":"南京市鼓楼区xxxxxx","linkman":"谢老板","phone":"123123123"
-                             ,"zzh":"3","commpanylevel":"VIP1","flag":"启用","joindate":"2022-1-1"},
-                             {"name":"安普惠融资担保有限公司","address":"南京市鼓楼区xxxxxx","linkman":"谢老板","phone":"123123123"
-                             ,"zzh":"3","commpanylevel":"VIP1","flag":"启用","joindate":"2022-1-1"},
-                             {"name":"安普惠融资担保有限公司","address":"南京市鼓楼区xxxxxx","linkman":"谢老板","phone":"123123123"
-                             ,"zzh":"3","commpanylevel":"VIP1","flag":"启用","joindate":"2022-1-1"},
-                             {"name":"安普惠融资担保有限公司","address":"南京市鼓楼区xxxxxx","linkman":"谢老板","phone":"123123123"
-                             ,"zzh":"3","commpanylevel":"VIP1","flag":"启用","joindate":"2022-1-1"},
-                             {"name":"安普惠融资担保有限公司","address":"南京市鼓楼区xxxxxx","linkman":"谢老板","phone":"123123123"
-                             ,"zzh":"3","commpanylevel":"VIP1","flag":"启用","joindate":"2022-1-1"}
-                        ]
-                    },  
-    				columns:[[ 
-              					       {field:'name',title:'服务商名称',width:200,align:'center'},  
-              					       {field:'address',title:'公司地址',width:200,align:'center',formatter:function(val,row){
-                                return "<a href='commpanymap.html'  target='view_window'>"+val+"</a>";
-                               }},  
-              					       {field:'linkman',title:'联系人',width:100,align:'center'},
-                               {field:'phone',title:'公司电话',width:100,align:'center'},
-                               {field:'zzh',title:'平台子账号',width:100,align:'center'},
-                               {field:'commpanylevel',title:'服务商等级',width:100,align:'center'},
-                               {field:'joindate',title:'入驻时间',width:100,align:'center'},
-                               {field:'flag',title:'状态',width:100,align:'center'},
-                               {field:'cz',title:'操作',width:200,align:'center',formatter:function(val,row){
-                                     return "<a href='javascript:showDg();'>查看</a>";
-                               }}
-                        ]],  
-        				toolbar: "#tooldiv",  
-        				pagination: true,
-        				singleSelect:true
-    			});
+               url: '/manager/serverCompany/selectAllCommerce',
+               method: 'get',
+               columns: [
+                   [
+                       {field: 'id', title: 'ID', width: 50, hidden: true},
+                       {field: 'name', title: '服务商名称', width: 200, align: 'center'},
+                       {
+                           field: 'address',
+                           title: '公司地址',
+                           width: 200,
+                           align: 'center',
+                           formatter: function (val, row) {
+                               return `<a href="commpanymap.html?gps=${row.gps}" target="_blank">${val}</a>`;
+                           }
+                       },
+                       {field: 'linkman', title: '联系人', width: 100, align: 'center'},
+                       {field: 'phone', title: '公司电话', width: 200, align: 'center'},
+                       {
+                           field: 'zzh',
+                           title: '平台子账号',
+                           width: 100,
+                           align: 'center',
+                           formatter: function (value, row) {
+                               return row.userStats ? row.userStats.count : '0';
+                           }
+                       },
+                       {
+                           field: 'commpanylevel',
+                           title: '服务商等级',
+                           width: 100,
+                           align: 'center',
+                           formatter: function (value, row) {
+                               return row.member ? row.member.level : '-';
+                           }
+                       },
+                       {field: 'joindate', title: '入驻时间', width: 200, align: 'center'},
+                       {
+                           field: 'flag',
+                           title: '状态',
+                           width: 100,
+                           align: 'center',
+                           formatter: function (val) {
+                               return val === 1 ? '启用' : '禁用';
+                           }
+                       },
+                       {
+                           field: 'cz',
+                           title: '操作',
+                           width: 100,
+                           align: 'center',
+                           formatter: function (val, row) {
+                               return `<a href="javascript:showDg('${row.id}');">查看</a>`;
+                           }
+                       }
+                   ]
+               ],
+               toolbar: "#tooldiv",
+               pagination: true,
+               singleSelect: true
+           });
 
          //初始化子账号列表初始化
-        $('#subaccountlist').datagrid({  
-              data:{
-                    "total":3,
-                    "rows":[
-                       {"name":"张三","nickname":"服务商员工1","phone":"1234567","wechat":"1111111111","qq":"22222222222","sex":"女" ,"flag":"启用"},
-                       {"name":"李四","nickname":"服务商员工1","phone":"1234567","wechat":"1111111111","qq":"22222222222","sex":"女" ,"flag":"启用"},
-                       {"name":"王五","nickname":"服务商员工1","phone":"1234567","wechat":"1111111111","qq":"22222222222","sex":"女" ,"flag":"启用"}
-                    ]
-                  },
-              columns:[[  
+        $('#subaccountlist').datagrid({
+              columns:[
+                  [
                                  {field:'name',title:'姓名',width:100,align:'center'},  
                                  {field:'phone',title:'电话',width:100,align:'center'},  
                                  {field:'wechat',title:'微信号',width:100,align:'center'},
@@ -69,7 +86,8 @@
                                  {field:'cz',title:'操作',width:100,align:'center',formatter:function(val,row){
                                      return "<a href='javascript:alert();'>解除关联</a>";
                                }}
-                          ]],  
+                          ]
+              ],
               pagination: false,
               singleSelect:true
       });
@@ -123,16 +141,30 @@
           });
 
          //初始化查询按钮
-         $("#submit_search").linkbutton({ iconCls: 'icon-search', plain: true })
-            .click(function () {
-                 alert("开始查询");
-            });
-            
-	   });
+           $("#submit_search").linkbutton({iconCls: 'icon-search', plain: true})
+               .click(function () {
+                   $('#commpanylist').datagrid('load', {
+                       name: $('#searchName').val(),
+                       phone: $('#searchPhone').val(),
+                       level: $('#searchLevel').val(),
+                       flag: $('#searchStatus').val()
+                   });
+               });
+       });
 
         //查询弹出方法
-       function showDg(){
-             $('#dg').dialog("open");
+       function showDg(id) {
+           $('#dg').dialog("open");
+           // 根据 ID 请求详情数据
+           $.get('/manager/serverCompany/showDetail', {id: id}, function (data) {
+               $('#dg').find('input.easyui-textbox').each(function () {
+                   var field = $(this).data('options').label.replace(':', '');
+                   $(this).textbox('setValue', data[field] || '');
+               });
+               // 处理文本域和图片
+               $('#dg textarea').val(data.info);
+               $('.imgtab').html(data.images.map(img => `<img src="${img.url}">`).join(''));
+           });
        }
 
        //打开修改界面方法
@@ -141,31 +173,79 @@
        }
 
        //打开子账号展示界面方法
-       function opensubaccountdg(){
-            $('#subaccountdg').dialog('open');
+       function opensubaccountdg() {
+           $('#subaccountdg').dialog('open');
+           const row = $('#commpanylist').datagrid('getSelected');
+           if (row) {
+               $('#subaccountlist').datagrid({
+                   url: '/manager/serverCompany/showUserList',
+                   queryParams: {companyId: row.id}
+               });
+           }
+       }
+
+       // 禁用服务商
+       function disableCompany() {
+           const row = $('#commpanylist').datagrid('getSelected');
+           if (row && row.id) {
+               $.ajax({
+                   url: '/manager/serverCompany/updateServerCompanyFlag0',
+                   method: 'POST',
+                   data: {id: row.id},
+                   success: function (response) {
+                       $('#commpanylist').datagrid('reload');
+                   },
+                   error: function () {
+                       alert('禁用失败');
+                   }
+               });
+           } else {
+               alert('请先选择一个服务商');
+           }
+       }
+
+       // 启用服务商
+       function enableCompany() {
+           const row = $('#commpanylist').datagrid('getSelected');
+           if (row && row.id) {
+               $.ajax({
+                   url: '/manager/serverCompany/updateServerCompanyFlag1',
+                   method: 'POST',
+                   data: {id: row.id},
+                   success: function (response) {
+                       $('#commpanylist').datagrid('reload');
+                   },
+                   error: function () {
+                       alert('启用失败');
+                   }
+               });
+           } else {
+               alert('请先选择一个服务商');
+           }
        }
 	</script>
 </head>
 <body>
   <div id="tooldiv">
-      <input type="text"  placeholder="请输入查询服务商名"/>
-      <input type="text"  placeholder="请输入查询服务商电话"/>
-      <select>
+      <input id="searchName" type="text" placeholder="请输入服务商名称"/>
+      <input id="searchPhone" type="text" placeholder="请输入服务商电话"/>
+      <select id="searchLevel">
           <option value="">请选服务商等级</option>
-          <option value="">VIP1</option>
-          <option value="">VIP2</option>
-          <option value="">VIP3</option>
+          <option value="VIP体验">VIP体验</option>
+          <option value="初级VIP">初级VIP</option>
+          <option value="中级VIP">中级VIP</option>
+          <option value="高级VIP">高级VIP</option>
       </select>
-      <select>
+      <select id="searchStatus">
           <option value="">请选状态</option>
-          <option value="">启用</option>
-          <option value="">禁用</option>
+          <option value="1">启用</option>
+          <option value="0">禁用</option>
       </select>
       <a id="submit_search">搜索</a>
           <a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="openeditdg()">修改</a>
           <a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" onclick="opensubaccountdg()">子账户维护</a>
-          <a class="easyui-linkbutton" data-options="iconCls:'icon-remove'" >禁用</a>
-          <a class="easyui-linkbutton" data-options="iconCls:'icon-add'" >启用</a>
+      <a class="easyui-linkbutton" data-options="iconCls:'icon-remove'" onclick="disableCompany()">禁用</a>
+      <a class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="enableCompany()">启用</a>
   </div>
   <table id="commpanylist"></table>
     <!--服务商详情展示界面-->
