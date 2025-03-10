@@ -1,6 +1,7 @@
 package com.itany.service;
 
 import com.github.pagehelper.PageInfo;
+import com.itany.entity.Examine;
 import com.itany.entity.ServerCompany;
 import com.itany.exception.RequestParameterErrorException;
 import com.itany.exception.ServerCompanyExistException;
@@ -29,7 +30,12 @@ public interface ServerCompanyService {
     void updateServerCompanyFlag0(String id) throws RequestParameterErrorException;
 
     /**
-     * 启用用户状态方法
+     * 启用服务商状态方法
      */
     void updateServerCompanyFlag1(String id) throws RequestParameterErrorException;
+
+    /**
+     * 添加服务商方法
+     */
+    void addServerCompany(Examine examine) throws ServerCompanyExistException;
 }

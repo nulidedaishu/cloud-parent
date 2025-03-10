@@ -58,8 +58,8 @@ public class ServerCompanyController {
     @RequestMapping("/selectAllCommerce")
     @ResponseBody
     public Map<String, Object> selectServerCommerce(
-            @RequestParam(defaultValue = DictConstant.SERVERCOMPANYLIFE_DEFAULT_NO) String page,
-            @RequestParam(defaultValue = DictConstant.SERVERCOMPANYLIFE_DEFAULT_PAGE) String rows,
+            @RequestParam(defaultValue = DictConstant.SERVERCOMPANYCOMMERCE_DEFAULT_NO) String page,
+            @RequestParam(defaultValue = DictConstant.SERVERCOMPANYCOMMERCE_DEFAULT_PAGE) String rows,
             @ModelAttribute ServerCompany serverCompany,
             @RequestParam(required = false) String level) {
         serverCompany.setType(DictConstant.SERVER_COMMERCE);

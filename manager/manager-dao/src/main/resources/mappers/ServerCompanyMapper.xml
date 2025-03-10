@@ -445,7 +445,7 @@
         LEFT JOIN t_member m ON mc.memberid = m.id
         <where>
             <if test="id != null">
-                AND c.id = #{id},
+                AND c.id = #{id}
             </if>
             <if test="name != null and name != ''">
                 AND c.name LIKE CONCAT('%', #{name}, '%')
