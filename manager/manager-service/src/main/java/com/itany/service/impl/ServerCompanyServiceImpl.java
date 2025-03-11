@@ -3,6 +3,7 @@ package com.itany.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.itany.constant.DictConstant;
+import com.itany.entity.Examine;
 import com.itany.entity.ServerCompany;
 import com.itany.entity.ServerCompanyExample;
 import com.itany.entity.User;
@@ -82,5 +83,11 @@ public class ServerCompanyServiceImpl implements ServerCompanyService {
             throw new RequestParameterErrorException("请求参数有误");
         }
         serverCompanyMapper.updateServerCompanyFlag1(Integer.parseInt(id));
+    }
+
+    @Override
+    public void addServerCompany(Examine examine) throws ServerCompanyExistException {
+
+        if (ParameterUtil.isNull(examine.getName()))
     }
 }
