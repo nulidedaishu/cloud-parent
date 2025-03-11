@@ -1,6 +1,7 @@
 package com.itany.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.itany.entity.User;
 import com.itany.service.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

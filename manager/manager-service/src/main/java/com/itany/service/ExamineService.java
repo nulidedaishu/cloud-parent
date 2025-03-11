@@ -3,6 +3,7 @@ package com.itany.service;
 import com.github.pagehelper.PageInfo;
 import com.itany.entity.Examine;
 import com.itany.exception.RequestParameterErrorException;
+import com.itany.exception.ServerCompanyExistException;
 import com.itany.exception.ServiceException;
 
 public interface ExamineService {
@@ -20,5 +21,5 @@ public interface ExamineService {
     /**
      * 审核方法
      */
-    void updateExamine(Examine examine) throws RequestParameterErrorException,ServiceException;
+    void updateExamine(Examine examine) throws RequestParameterErrorException, ServiceException, ServerCompanyExistException;
 }

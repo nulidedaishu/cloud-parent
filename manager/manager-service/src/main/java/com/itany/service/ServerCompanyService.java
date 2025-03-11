@@ -37,5 +37,5 @@ public interface ServerCompanyService {
     /**
      * 添加服务商方法
      */
-    void addServerCompany(Examine examine) throws ServerCompanyExistException;
+    void addServerCompany(Examine examine) throws RequestParameterErrorException, ServiceException, ServerCompanyExistException;
 }

@@ -25,7 +25,7 @@
 
          function login(){
              $.ajax({
-                 url:"http://localhost:9001/web/login",
+                 url:"http://localhost:9006/web/login",
                  data:$("#f").serialize(),
                  dataType:"json",
                  type:"post",
@@ -44,7 +44,7 @@
          //测试获取token
          function  getToken(){
              $.ajax({
-                 url:"http://localhost:9001/web/getToken",
+                 url:"http://localhost:9006/web/getToken",
                  dataType:"json",
                  type:"post",
                  headers:{
@@ -60,7 +60,7 @@
 <body>
 <button type="button" onclick="getToken()">获取</button>
 <form action="javascript:void(0)" method="post" id="f">
-    <label>用户名:</label><input type="text" name="username"/><br/>
+    <label>用户名:</label><input type="text" name="name"/><br/>
     <label>密码:</label><input type="password" name="password"/><br/>
     <button type="button" onclick="login()">提交</button>
 </form>

@@ -6,7 +6,7 @@
     <script>
         function testToken(){
             $.ajax({
-                url:"http://localhost:9001/web/getToken",
+                url:"http://localhost:9006/web/getToken",
                 dataType:"json",
                 type:"post",
                 headers:{
@@ -28,7 +28,7 @@
             <th>电话</th>
         </tr>
         <tr th:each="user,userStat: ${pageInfo.list}">
-            <td th:text="${user.username}"></td>
+            <td th:text="${user.name}"></td>
             <td th:text="${user.password}"></td>
             <td th:if="${user.status eq '1'}">启用</td>
             <td th:if="${user.status eq '2'}">禁用</td>
