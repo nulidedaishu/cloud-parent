@@ -1,5 +1,6 @@
 package com.itany.controllers;
 
+import com.github.pagehelper.PageInfo;
 import com.itany.constant.DictConstant;
 import com.itany.entity.ServerCompany;
 import com.itany.exception.RequestParameterErrorException;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.github.pagehelper.PageInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,8 +37,8 @@ public class ServerCompanyController {
     @RequestMapping("/selectAllLife")
     @ResponseBody
     public Map<String, Object> selectServerLife(
-            @RequestParam(defaultValue = DictConstant.SERVERCOMPANYLIFE_DEFAULT_NO) String page,
-            @RequestParam(defaultValue = DictConstant.SERVERCOMPANYLIFE_DEFAULT_PAGE) String rows,
+            @RequestParam(defaultValue = DictConstant.SERVER_LIFE_DEFAULT_NO) String page,
+            @RequestParam(defaultValue = DictConstant.SERVER_LIFE_DEFAULT_PAGE) String rows,
             @ModelAttribute ServerCompany serverCompany,
             @RequestParam(required = false) String level) {
         serverCompany.setType(DictConstant.SERVER_LIFE);
@@ -58,8 +57,8 @@ public class ServerCompanyController {
     @RequestMapping("/selectAllCommerce")
     @ResponseBody
     public Map<String, Object> selectServerCommerce(
-            @RequestParam(defaultValue = DictConstant.SERVERCOMPANYCOMMERCE_DEFAULT_NO) String page,
-            @RequestParam(defaultValue = DictConstant.SERVERCOMPANYCOMMERCE_DEFAULT_PAGE) String rows,
+            @RequestParam(defaultValue = DictConstant.SERVER_COMMERCE_DEFAULT_NO) String page,
+            @RequestParam(defaultValue = DictConstant.SERVER_COMMERCE_DEFAULT_PAGE) String rows,
             @ModelAttribute ServerCompany serverCompany,
             @RequestParam(required = false) String level) {
         serverCompany.setType(DictConstant.SERVER_COMMERCE);
@@ -77,10 +76,10 @@ public class ServerCompanyController {
 
     @RequestMapping("/showDetail")
     @ResponseBody
-    public Map<String, Object> selectServerCompanyById(String id) {
+    public Map<String, Object> selectServerCompanyById(@ModelAttribute ServerCompany serverCompany) {
         Map<String, Object> result = new HashMap<>();
         try {
-            ServerCompany serverCompany = serverCompanyService.selectServerCompanyById(id);
+            serverCompany = serverCompanyService.selectServerCompanyById(serverCompany);
             result.put("serverCompany", serverCompany);
             result.put("success", true);
             result.put("message", "查询成功");
@@ -112,12 +111,12 @@ public class ServerCompanyController {
         return result;
     }
 
-    @RequestMapping("/updateServerCompanyFlag0")
+    @RequestMapping("/disableServerCompany")
     @ResponseBody
-    public Map<String, Object> updateServerCompanyFlag0(String id) {
+    public Map<String, Object> disableServerCompany(@ModelAttribute ServerCompany serverCompany) {
         Map<String, Object> result = new HashMap<>();
         try {
-            serverCompanyService.updateServerCompanyFlag0(id);
+            serverCompanyService.disableServerCompany(serverCompany);
             result.put("success", true);
             result.put("message", "修改成功");
         } catch (RequestParameterErrorException e) {
@@ -130,12 +129,12 @@ public class ServerCompanyController {
         return result;
     }
 
-    @RequestMapping("/updateServerCompanyFlag1")
+    @RequestMapping("/enableServerCompany")
     @ResponseBody
-    public Map<String, Object> updateServerCompanyFlag1(String id) {
+    public Map<String, Object> enableServerCompany(@ModelAttribute ServerCompany serverCompany) {
         Map<String, Object> result = new HashMap<>();
         try {
-            serverCompanyService.updateServerCompanyFlag1(id);
+            serverCompanyService.enableServerCompany(serverCompany);
             result.put("success", true);
             result.put("message", "修改成功");
         } catch (RequestParameterErrorException e) {

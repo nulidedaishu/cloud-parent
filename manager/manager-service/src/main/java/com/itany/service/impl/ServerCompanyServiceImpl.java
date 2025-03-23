@@ -10,12 +10,14 @@ import com.itany.entity.User;
 import com.itany.exception.RequestParameterErrorException;
 import com.itany.exception.ServerCompanyExistException;
 import com.itany.exception.ServiceException;
+import com.itany.exception.UserCompanyExistException;
+import com.itany.mapper.ServerCompanyMapper;
+import com.itany.service.ServerCompanyService;
+import com.itany.service.UserService;
 import com.itany.utils.ParameterUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.itany.mapper.ServerCompanyMapper;
-import com.itany.service.ServerCompanyService;
 
 import java.util.Date;
 import java.util.List;
@@ -26,23 +28,24 @@ public class ServerCompanyServiceImpl implements ServerCompanyService {
 
     @Autowired
     private ServerCompanyMapper serverCompanyMapper;
+    @Autowired
+    private UserService userService;
 
     @Override
-    public PageInfo<ServerCompany> selectServerLife(String page, String rows, ServerCompany serverCompany, String level) throws ServiceException {
+    public PageInfo<ServerCompany> selectServerLife(String page, String rows, ServerCompany serverCompany, String level) {
         Date currentDate = new Date();
-        System.out.println("用户" + serverCompany + "等级" + level + "时间" + currentDate);
         PageHelper.startPage(Integer.parseInt(page), Integer.parseInt(rows));
         List<ServerCompany> companies = serverCompanyMapper.selectServerCompanyWithUsersAndMembers(null, serverCompany.getName(), serverCompany.getPhone(), serverCompany.getFlag(), serverCompany.getType(), level, currentDate);
         return new PageInfo<>(companies);
     }
 
     @Override
-    public ServerCompany selectServerCompanyById(String id) throws RequestParameterErrorException {
-        if (ParameterUtil.isNull(id)) {
+    public ServerCompany selectServerCompanyById(ServerCompany serverCompany) throws RequestParameterErrorException {
+        if (serverCompany.getId() == null) {
             throw new RequestParameterErrorException("请求参数有误");
         }
         Date currentDate = new Date();
-        return serverCompanyMapper.selectServerCompanyWithUsersAndMembers(Integer.parseInt(id), null, null, null, null, null, currentDate).get(0);
+        return serverCompanyMapper.selectServerCompanyWithUsersAndMembers(serverCompany.getId(), null, null, null, null, null, currentDate).get(0);
     }
 
     @Override
@@ -64,29 +67,32 @@ public class ServerCompanyServiceImpl implements ServerCompanyService {
         if (count > 0) {
             throw new ServerCompanyExistException("公司名称或联系电话已被其他服务商使用");
         }
-
+        System.out.println("=============================");
+        System.out.println(serverCompany);
         serverCompanyMapper.updateByPrimaryKeySelective(serverCompany);
     }
 
 
     @Override
-    public void updateServerCompanyFlag0(String id) throws RequestParameterErrorException {
-        if (ParameterUtil.isNull(id)) {
+    public void disableServerCompany(ServerCompany serverCompany) throws RequestParameterErrorException {
+        if (serverCompany.getId() == null) {
             throw new RequestParameterErrorException("请求参数有误");
         }
-        serverCompanyMapper.updateServerCompanyFlag0(Integer.parseInt(id));
+        serverCompany.setFlag(DictConstant.COMPANY_DISABLED);
+        serverCompanyMapper.updateServerCompanyFlag(serverCompany);
     }
 
     @Override
-    public void updateServerCompanyFlag1(String id) throws RequestParameterErrorException {
-        if (ParameterUtil.isNull(id)) {
+    public void enableServerCompany(ServerCompany serverCompany) throws RequestParameterErrorException {
+        if (serverCompany.getId() == null) {
             throw new RequestParameterErrorException("请求参数有误");
         }
-        serverCompanyMapper.updateServerCompanyFlag1(Integer.parseInt(id));
+        serverCompany.setFlag(DictConstant.COMPANY_ENABLED);
+        serverCompanyMapper.updateServerCompanyFlag(serverCompany);
     }
 
     @Override
-    public void addServerCompany(Examine examine) throws RequestParameterErrorException, ServiceException, ServerCompanyExistException {
+    public void addServerCompany(Examine examine) throws RequestParameterErrorException, ServiceException, ServerCompanyExistException, UserCompanyExistException {
         if (examine == null) {
             throw new RequestParameterErrorException("请求参数有误");
         }
@@ -98,10 +104,18 @@ public class ServerCompanyServiceImpl implements ServerCompanyService {
             throw new ServerCompanyExistException("服务商名称重复");
         }
         serverCompany.setJoindate(new Date());
+        serverCompany.setFlag(DictConstant.COMPANY_ENABLED);
         int affected = serverCompanyMapper.insertSelective(serverCompany);
         if (affected == 0) {
             throw new ServiceException("添加服务商失败");
         }
+        User user = new User();
+        if (examine.getUserid() == null || serverCompany.getId() == null) {
+            throw new RequestParameterErrorException("请求参数有误");
+        }
+        user.setId(examine.getUserid());
+        user.setCompanyid(serverCompany.getId());
+        userService.addUserCompany(user);
     }
 
     private ServerCompany convertExamineToServerCompany(Examine examine) throws RequestParameterErrorException {
@@ -134,6 +148,12 @@ public class ServerCompanyServiceImpl implements ServerCompanyService {
 
         if (examine.getCommpanycreatedate() != null) {
             serverCompany.setCreatedate(examine.getCommpanycreatedate());
+        }
+
+        if (examine.getTypeid() != null) {
+            serverCompany.setType(examine.getTypeid());
+        } else {
+            throw new RequestParameterErrorException("种类不能为空");
         }
 
         if (examine.getLinkman() != null && !examine.getLinkman().trim().isEmpty()) {

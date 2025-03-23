@@ -1,7 +1,10 @@
 package com.itany.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.itany.vo.UserStats;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ServerCompany {
@@ -74,8 +77,12 @@ public class ServerCompany {
 
     private String scale;//规模
 
+    @JSONField(format = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdate;//成立日期
 
+    @JSONField(format = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date joindate;//入驻日期
 
     private Integer flag;//状态
@@ -133,6 +140,7 @@ public class ServerCompany {
     public void setScale(String scale) {
         this.scale = scale == null ? null : scale.trim();
     }
+
 
     public Date getCreatedate() {
         return createdate;

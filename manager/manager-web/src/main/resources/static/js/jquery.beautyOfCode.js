@@ -32,56 +32,55 @@ jQuery.beautyOfCode = {
         config: {},
         defaults: {},
         // function to be called, when all scripts are loaded
-        ready: function() {
+        ready: function () {
             jQuery.beautyOfCode.beautifyAll();
         }
     },
 
-    init: function(settings) {
+    init: function (settings) {
         settings = jQuery.extend({},
-        jQuery.beautyOfCode.settings, settings);
+            jQuery.beautyOfCode.settings, settings);
 
         if (!settings.config.clipboardSwf)
-        settings.config.clipboardSwf = settings.baseUrl + settings.scripts + 'clipboard.swf';
+            settings.config.clipboardSwf = settings.baseUrl + settings.scripts + 'clipboard.swf';
 
-        jQuery(document).ready(function() {
+        jQuery(document).ready(function () {
             if (!settings.autoLoad) {
                 settings.ready();
-            }
-            else {
+            } else {
                 jQuery.beautyOfCode.utils.loadCss(settings.baseUrl + settings.styles + 'shCore.css');
                 jQuery.beautyOfCode.utils.loadCss(settings.baseUrl + settings.styles + 'shTheme' + settings.theme + '.css', 'shTheme');
 
                 var scripts = new Array();
                 scripts.push(settings.baseUrl + settings.scripts + 'shCore.js');
                 jQuery.each(settings.brushes,
-                function(i, item) {
-                    scripts.push(settings.baseUrl + settings.scripts + 'shBrush' + item + ".js")
-                });
+                    function (i, item) {
+                        scripts.push(settings.baseUrl + settings.scripts + 'shBrush' + item + ".js")
+                    });
 
                 jQuery.beautyOfCode.utils.loadAllScripts(
-                scripts,
-                function() {
-                    if (settings && settings.config)
-                    jQuery.extend(SyntaxHighlighter.config, settings.config);
+                    scripts,
+                    function () {
+                        if (settings && settings.config)
+                            jQuery.extend(SyntaxHighlighter.config, settings.config);
 
-                    if (settings && settings.defaults)
-                    jQuery.extend(SyntaxHighlighter.defaults, settings.defaults);
+                        if (settings && settings.defaults)
+                            jQuery.extend(SyntaxHighlighter.defaults, settings.defaults);
 
-                    settings.ready();
-                });
+                        settings.ready();
+                    });
             }
         });
     },
 
-    beautifyAll: function() {
+    beautifyAll: function () {
         jQuery("pre.code:has(code[class])").beautifyCode();
     },
     utils: {
-        loadScript: function(url, complete) {
+        loadScript: function (url, complete) {
             jQuery.ajax({
                 url: url,
-                complete: function() {
+                complete: function () {
                     complete();
                 },
                 type: 'GET',
@@ -89,27 +88,25 @@ jQuery.beautyOfCode = {
                 cache: true
             });
         },
-        loadAllScripts: function(urls, complete) {
-            if (!urls || urls.length == 0)
-            {
+        loadAllScripts: function (urls, complete) {
+            if (!urls || urls.length == 0) {
                 complete();
                 return;
             }
             var first = urls[0];
             jQuery.beautyOfCode.utils.loadScript(
-            first,
-            function() {
-                jQuery.beautyOfCode.utils.loadAllScripts(
-                urls.slice(1, urls.length),
-                complete
-                );
-            }
+                first,
+                function () {
+                    jQuery.beautyOfCode.utils.loadAllScripts(
+                        urls.slice(1, urls.length),
+                        complete
+                    );
+                }
             );
         },
-        loadCss: function(url, id) {
+        loadCss: function (url, id) {
             var headNode = jQuery("head")[0];
-            if (url && headNode)
-            {
+            if (url && headNode) {
                 var styleNode = document.createElement('link');
                 styleNode.setAttribute('rel', 'stylesheet');
                 styleNode.setAttribute('href', url);
@@ -117,10 +114,9 @@ jQuery.beautyOfCode = {
                 headNode.appendChild(styleNode);
             }
         },
-        addCss: function(css, id) {
+        addCss: function (css, id) {
             var headNode = jQuery("head")[0];
-            if (css && headNode)
-            {
+            if (css && headNode) {
                 var styleNode = document.createElement('style');
 
                 styleNode.setAttribute('type', 'text/css');
@@ -130,15 +126,14 @@ jQuery.beautyOfCode = {
                 if (styleNode.styleSheet) {
                     // for IE	
                     styleNode.styleSheet.cssText = css;
-                }
-                else {
+                } else {
                     jQuery(styleNode).text(css);
                 }
 
                 headNode.appendChild(styleNode);
             }
         },
-        addCssForBrush: function(brush, highlighter) {
+        addCssForBrush: function (brush, highlighter) {
             if (brush.isCssInitialized)
                 return;
 
@@ -146,12 +141,12 @@ jQuery.beautyOfCode = {
 
             brush.isCssInitialized = true;
         },
-        parseParams: function(params) {
+        parseParams: function (params) {
             var trimmed = jQuery.map(params, jQuery.trim);
 
             var paramObject = {};
 
-            var getOptionValue = function(name, list) {
+            var getOptionValue = function (name, list) {
                 var regex = new RegExp('^' + name + '\\[([^\\]]+)\\]$', 'gi');
                 var matches = null;
 
@@ -162,7 +157,7 @@ jQuery.beautyOfCode = {
                 return null;
             }
 
-            var handleValue = function(flag) {
+            var handleValue = function (flag) {
                 var flagValue = getOptionValue('boc-' + flag, trimmed);
                 if (flagValue) paramObject[flag] = flagValue;
             };
@@ -174,7 +169,7 @@ jQuery.beautyOfCode = {
             var highlight = getOptionValue('boc-highlight', trimmed);
             if (highlight) paramObject['highlight'] = jQuery.map(highlight.split(','), jQuery.trim);
 
-            var handleFlag = function(flag) {
+            var handleFlag = function (flag) {
                 if (jQuery.inArray('boc-' + flag, trimmed) != -1)
                     paramObject[flag] = true;
                 else if (jQuery.inArray('boc-no-' + flag, trimmed) != -1)
@@ -196,12 +191,12 @@ jQuery.beautyOfCode = {
     }
 };
 
-jQuery.fn.beautifyCode = function(brush, params) {
+jQuery.fn.beautifyCode = function (brush, params) {
     var saveBrush = brush;
     var saveParams = params;
 
     // iterate all elements
-    this.each(function(i, item) {
+    this.each(function (i, item) {
         var $item = jQuery(item);
 
         // for now, only supports <pre><code>...</code></pre>
@@ -210,19 +205,16 @@ jQuery.fn.beautifyCode = function(brush, params) {
         var code = $code[0];
         var classItems = code.className.split(" ");
 
-        var brush = saveBrush ? saveBrush: classItems[0];
+        var brush = saveBrush ? saveBrush : classItems[0];
         var elementParams = jQuery.beautyOfCode.utils.parseParams(classItems);
 
         var params = jQuery.extend({},
-        SyntaxHighlighter.defaults, saveParams, elementParams);
+            SyntaxHighlighter.defaults, saveParams, elementParams);
 
         // Instantiate a brush
-        if (params['html-script'] == 'true')
-        {
+        if (params['html-script'] == 'true') {
             highlighter = new SyntaxHighlighter.HtmlScript(brush);
-        }
-        else
-        {
+        } else {
             var brush = SyntaxHighlighter.utils.findBrush(brush);
 
             if (brush)
@@ -237,7 +229,7 @@ jQuery.fn.beautifyCode = function(brush, params) {
         // IE Bug?: code in pre has to be skipped
         // in order to preserve line breaks.
         if ($item.is("pre") && ($code = $item.children("code")))
-           $item.text($code.text());
+            $item.text($code.text());
 
         highlighter.highlight($item.html(), params);
         highlighter.source = item;

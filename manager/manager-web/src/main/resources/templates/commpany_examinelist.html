@@ -28,12 +28,52 @@
                                 return `<a href="commpanymap.html?gps=${row.gps}" target="_blank">${val}</a>`;
                             }
                         },
-                        {field: 'typeid', title: '服务类型', width: 100, align: 'center'},
-                        {field: 'createdate', title: '提交日期', width: 100, align: 'center'},
-                        {field: 'userid', title: '申请账户名', width: 100, align: 'center'},
-                        {field: 'flag', title: '状态', width: 100, align: 'center'},
                         {
-                            field: 'cz', title: '操作', width: 200, align: 'center', formatter: function (val, row) {
+                            field: 'typeid',
+                            title: '服务类型',
+                            width: 80,
+                            align: 'center',
+                            formatter: function (value, row) {
+                                if (row.typeid !== undefined) {
+                                    switch (row.typeid) {
+                                        case 1:
+                                            return "生活";
+                                        case 2:
+                                            return "商务";
+                                    }
+                                }
+                            }
+                        },
+                        {field: 'createdate', title: '提交日期', width: 150, align: 'center'},
+                        {
+                            field: 'username',
+                            title: '申请账户名',
+                            width: 100,
+                            align: 'center',
+                            formatter: function (value, row) {
+                                return row.user ? row.user.nickname : '';
+                            }
+                        },
+                        {
+                            field: 'flag',
+                            title: '状态',
+                            width: 100,
+                            align: 'center',
+                            formatter: function (value, row) {
+                                if (row.flag !== undefined) {
+                                    switch (row.flag) {
+                                        case 0:
+                                            return "待审核";
+                                        case 1:
+                                            return "已通过";
+                                        case -1:
+                                            return "未通过";
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            field: 'cz', title: '操作', width: 150, align: 'center', formatter: function (val, row) {
                                 return `<a href="javascript:showDg('${row.id}');">查看加盟商详情</a>`;
                             }
                         }
@@ -83,7 +123,7 @@
                                         $('#examinelist').datagrid('reload');
                                         $("#examinedg").dialog("close");
                                     } else {
-                                        alert('审核失败');
+                                        alert('审核失败：' + response.message);
                                     }
                                 },
                                 error: function () {

@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -22,9 +21,9 @@ public class TestMvcConfig implements WebMvcConfigurer {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         //1.定义一个convert转换消息对象--字符串解析器
-        StringHttpMessageConverter converter  = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+        StringHttpMessageConverter converter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
         //2.将convert添加到converters中并设置优先级
-        converters.add(0,converter);
+        converters.add(0, converter);
         //1.定义一个convert转换消息对象--json解析器
         FastJsonHttpMessageConverter fastConverter = new FastJsonHttpMessageConverter();
         //2.1添加fastjson的配置信息
@@ -42,7 +41,7 @@ public class TestMvcConfig implements WebMvcConfigurer {
         //3.在convert中添加配置信息
         fastConverter.setFastJsonConfig(fastJsonConfig);
         //4.将convert添加到converters中并设置优先级
-        converters.add(1,fastConverter);
+        converters.add(1, fastConverter);
     }
 
     public void addViewControllers(ViewControllerRegistry registry) {
@@ -50,7 +49,6 @@ public class TestMvcConfig implements WebMvcConfigurer {
         registry.addViewController("/showdt").setViewName("");
         registry.addViewController("/showLogin").setViewName("login");
     }
-
 
 
 }

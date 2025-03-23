@@ -14,14 +14,10 @@
                 iconCls: 'icon-save',
                 url: '/manager/userList/selectUser',
                 method: 'get',
-                // queryParams: {
-                //     page: 1,
-                //     rows: 10
-                // },
                 columns: [
                     [
-                        {field: 'id', title: 'ID', width: 50, hidden: true},  <!-- Hidden ID -->
-                        {field: 'name', title: '姓名', width: 100, align: 'center'},
+                        {field: 'id', title: 'ID', width: 50, hidden: true},
+                        {field: 'nickname', title: '姓名', width: 100, align: 'center'},
                         {field: 'phone', title: '电话', width: 100, align: 'center'},
                         {field: 'wechat', title: '微信号', width: 100, align: 'center'},
                         {field: 'qq', title: 'QQ', width: 200, align: 'center'},
@@ -54,7 +50,22 @@
                                 }
                             }
                         },
-                        {field: 'flag', title: '状态', width: 100, align: 'center'},
+                        {
+                            field: 'flag',
+                            title: '状态',
+                            width: 100,
+                            align: 'center',
+                            formatter: function (value, row) {
+                                if (row.flag !== undefined) {
+                                    switch (row.flag) {
+                                        case 0:
+                                            return "禁用";
+                                        case 1:
+                                            return "启用";
+                                    }
+                                }
+                            }
+                        },
                         {
                             field: 'cz', title: '操作', width: 150, align: 'center', formatter: function (val, row) {
                                 return `<a href="javascript:showDg('${row.id}');">查看</a>`;
@@ -109,12 +120,8 @@
                     method: 'GET',
                     data: {id: selectedUser.id},
                     success: function (data) {
-                        console.log(data); // 输出获取的 data
-                        console.log('name:' + data.user.name); // 输出 name
-
-                        // 填充数据到弹出框
-                        var user = data.user;
-                        var serverCompany = user.serverCompany;
+                        const user = data.user;
+                        const serverCompany = user.serverCompany;
 
                         // 填充用户详情
                         $("input[name='usernameDg']").val(user.name);  // 姓名
@@ -148,7 +155,7 @@
             var selectedUser = $('#userlist').datagrid('getSelected');
             if (selectedUser) {
                 $.ajax({
-                    url: '/manager/userList/updateUserFlag1',
+                    url: '/manager/userList/enableUser',
                     method: 'POST',
                     data: {id: selectedUser.id},
                     success: function (response) {
@@ -168,7 +175,7 @@
             var selectedUser = $('#userlist').datagrid('getSelected');
             if (selectedUser) {
                 $.ajax({
-                    url: '/manager/userList/updateUserFlag0',
+                    url: '/manager/userList/disableUser',
                     method: 'POST',
                     data: {id: selectedUser.id},
                     success: function (response) {
@@ -192,7 +199,7 @@
     <input type="text" placeholder="请输入查询QQ" name="qq"/>
     <select id="userTypeSelect">
         <option value="">请选用户类型</option>
-        <option value="0">普通用户</option>
+        <option value="">普通用户</option>
         <option value="1">生活服务商</option>
         <option value="2">商务服务商</option>
     </select>

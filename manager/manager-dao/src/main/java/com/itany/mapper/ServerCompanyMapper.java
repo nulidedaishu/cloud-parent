@@ -108,9 +108,5 @@ public interface ServerCompanyMapper {
             @Param("currentDate") Date currentDate
     );
 
-    void updateServerCompanyFlag0(Integer id);
-
-    void updateServerCompanyFlag1(Integer id);
-
-
+    void updateServerCompanyFlag(ServerCompany serverCompany);
 }

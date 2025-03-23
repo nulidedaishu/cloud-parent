@@ -464,15 +464,10 @@
         </where>
     </select>
 
-    <update id="updateUserFlag0">
+    <update id="updateUserFlag">
         UPDATE t_user
-        SET flag = 0
+        SET flag = #{flag}
         WHERE id = #{id}
     </update>
 
-    <update id="updateUserFlag1">
-        UPDATE t_user
-        SET flag = 1
-        WHERE id = #{id}
-    </update>
 </mapper>

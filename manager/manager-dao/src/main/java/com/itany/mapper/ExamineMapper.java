@@ -2,10 +2,9 @@ package com.itany.mapper;
 
 import com.itany.entity.Examine;
 import com.itany.entity.ExamineExample;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
 
 public interface ExamineMapper {
     /**

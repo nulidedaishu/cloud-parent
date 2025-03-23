@@ -29,7 +29,7 @@
                             }
                         },
                         {field: 'linkman', title: '联系人', width: 100, align: 'center'},
-                        {field: 'phone', title: '公司电话', width: 200, align: 'center'},
+                        {field: 'phone', title: '公司电话', width: 125, align: 'center'},
                         {
                             field: 'zzh',
                             title: '平台子账号',
@@ -48,7 +48,7 @@
                                 return row.member ? row.member.level : '-';
                             }
                         },
-                        {field: 'joindate', title: '入驻时间', width: 200, align: 'center'},
+                        {field: 'joindate', title: '入驻时间', width: 150, align: 'center'},
                         {
                             field: 'flag',
                             title: '状态',
@@ -94,7 +94,6 @@
                 singleSelect: true
             });
 
-
             //初始化修改窗口
             $('#dg').dialog({
                 title: '服务商详情',
@@ -115,7 +114,6 @@
                 modal: true,
                 iconCls: 'icon-save'
             });
-
 
             $("#subaccountdg").dialog({
                 title: '子账户展示',
@@ -141,22 +139,96 @@
 
         //查询弹出方法
         function showDg(id) {
-            $('#dg').dialog("open");
-            // 根据 ID 请求详情数据
-            $.get('/manager/serverCompany/showDetail', {id: id}, function (data) {
-                $('#dg').find('input.easyui-textbox').each(function () {
-                    var field = $(this).data('options').label.replace(':', '');
-                    $(this).textbox('setValue', data[field] || '');
-                });
-                // 处理文本域和图片
-                $('#dg textarea').val(data.info);
-                $('.imgtab').html(data.images.map(img => `<img src="${img.url}">`).join(''));
+            $.ajax({
+                url: '/manager/serverCompany/showDetail',
+                type: 'GET',
+                data: {id: id},
+                success: function (data) {
+                    $('#dg_name').textbox('setValue', data.serverCompany.name);
+                    $('#dg_address').textbox('setValue', data.serverCompany.address);
+                    $('#dg_phone').textbox('setValue', data.serverCompany.phone);
+                    $('#dg_linkman').textbox('setValue', data.serverCompany.linkman);
+                    $('#dg_scale').textbox('setValue', data.serverCompany.scale);
+                    $('#dg_count').textbox('setValue', data.serverCompany.userStats.count);
+                    if (data.serverCompany.type === 1) {
+                        $('#dg_type').textbox('setValue', '生活');
+                    } else if (data.serverCompany.type === 2) {
+                        $('#dg_type').textbox('setValue', '商务');
+                    }
+                    $('#dg_createdate').textbox('setValue', data.serverCompany.createdate);
+                    $('#dg_info').val(data.serverCompany.info);
+
+                    $('#dg').dialog("open");
+                },
+                error: function () {
+                    alert('获取数据失败，请重试');
+                }
             });
         }
 
+
         //打开修改界面方法
         function openeditdg() {
-            $('#editdg').dialog('open');
+            const row = $('#commpanylist').datagrid('getSelected');
+            if (!row) {
+                alert("请先选择一个服务商进行修改");
+                return;
+            }
+            $.ajax({
+                url: '/manager/serverCompany/showDetail',
+                type: 'GET',
+                data: {id: row.id},
+                success: function (data) {
+                    $('#id').val(data.serverCompany.id);
+                    $('#name').textbox('setValue', data.serverCompany.name);
+                    $('#address').textbox('setValue', data.serverCompany.address);
+                    $('#phone').textbox('setValue', data.serverCompany.phone);
+                    $('#linkman').textbox('setValue', data.serverCompany.linkman);
+                    $('#scale').textbox('setValue', data.serverCompany.scale);
+                    $('#type').combobox('setValue', data.serverCompany.type);
+                    $('#createdate').datebox('setValue', data.serverCompany.createdate);
+                    $('#gps').textbox('setValue', data.serverCompany.gps);
+                    $('#info').val(data.serverCompany.info);
+
+                    $('#editdg').dialog('open');
+                },
+                error: function () {
+                    alert('获取数据失败，请重试');
+                }
+            });
+        }
+
+        // 提交修改数据
+        function submitModification() {
+            console.log($('#type').combobox('getValue'));
+            const formData = {
+                id: $('#id').val(),
+                name: $('#name').textbox('getValue'),
+                address: $('#address').textbox('getValue'),
+                phone: $('#phone').textbox('getValue'),
+                linkman: $('#linkman').textbox('getValue'),
+                scale: $('#scale').textbox('getValue'),
+                type: $('#type').combobox('getValue'),
+                createdate: $('#createdate').datebox('getValue'),
+                gps: $('#gps').textbox('getValue'),
+                info: $('#info').val()
+            };
+            $.ajax({
+                url: '/manager/serverCompany/modifyServerCompany',
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        alert('修改成功');
+                        $('#editdg').dialog('close');
+                    } else {
+                        alert('修改失败');
+                    }
+                },
+                error: function () {
+                    alert('提交失败，请重试');
+                }
+            });
         }
 
         //打开子账号展示界面方法
@@ -176,7 +248,7 @@
             const row = $('#commpanylist').datagrid('getSelected');
             if (row && row.id) {
                 $.ajax({
-                    url: '/manager/serverCompany/updateServerCompanyFlag0',
+                    url: '/manager/serverCompany/disableServerCompany',
                     method: 'POST',
                     data: {id: row.id},
                     success: function (response) {
@@ -196,7 +268,7 @@
             const row = $('#commpanylist').datagrid('getSelected');
             if (row && row.id) {
                 $.ajax({
-                    url: '/manager/serverCompany/updateServerCompanyFlag1',
+                    url: '/manager/serverCompany/enableServerCompany',
                     method: 'POST',
                     data: {id: row.id},
                     success: function (response) {
@@ -210,9 +282,30 @@
                 alert('请先选择一个服务商');
             }
         }
+
+        function myFormatter(date) {
+            let y = date.getFullYear();
+            let m = date.getMonth() + 1;
+            let d = date.getDate();
+            return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+        }
+
+        function myParser(s) {
+            if (!s) return new Date();
+            let ss = (s.split('-'));
+            let y = parseInt(ss[0], 10);
+            let m = parseInt(ss[1], 10);
+            let d = parseInt(ss[2], 10);
+            if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+                return new Date(y, m - 1, d);
+            } else {
+                return new Date();
+            }
+        }
     </script>
 </head>
 <body>
+<!--工具栏-->
 <div id="tooldiv">
     <input id="searchName" type="text" placeholder="请输入服务商名称"/>
     <input id="searchPhone" type="text" placeholder="请输入服务商电话"/>
@@ -239,81 +332,98 @@
 <div id="dg">
     <div align="center" style="margin-top: 30px">
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%" data-options="label:'服务商名称:'" readonly="true"
-                   value="安普惠融资担保有限公司"/>
+            <input class="easyui-textbox" style="width:50%" data-options="label:'服务商名称:'" readonly="true" id="dg_name"
+                   value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%" data-options="label:'公司地址:'" readonly="true"
-                   value="南京市鼓楼区xxxxxx"/>
+            <input class="easyui-textbox" style="width:50%" data-options="label:'公司地址:'" readonly="true" id="dg_address"
+                   value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%" data-options="label:'公司电话:'" readonly="true"
-                   value="123456123"/>
+            <input class="easyui-textbox" style="width:50%" data-options="label:'公司电话:'" readonly="true" id="dg_phone"
+                   value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%;" data-options="label:'联系人:'" readonly="true" value="谢老板"/>
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'联系人:'" readonly="true" id="dg_linkman"
+                   value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%;" data-options="label:'规模:'" readonly="true" value="100人以上"/>
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'规模:'" readonly="true" id="dg_scale"
+                   value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%;" data-options="label:'平台子账号:'" readonly="true" value="3"/>
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'平台子账号:'" readonly="true" id="dg_count"
+                   name="row.userStats.count" value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%;" data-options="label:'服务商类型:'" readonly="true"
-                   value="VIP1"/>
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'服务商类型:'" readonly="true" id="dg_type"
+                   value=""/>
         </div>
         <div style="margin-bottom:20px">
             <input class="easyui-textbox" style="width:50%;" data-options="label:'注册时间:'" readonly="true"
-                   value="2021-1-1"/>
+                   id="dg_createdate" value=""/>
         </div>
         <div style="margin-bottom:20px">
-                <textarea cols="80" rows="5" readonly="true" style="border: 0px;">
- 百姓网成立于2005年3月，是国内领先的分类信息生态服务商，是中国互联网轻资产模式的典范百姓网致力于创造以分类信息业务为平台、多条垂直业务线布局的生态圈为用户提供涵生活服务、招聘求职、房屋租售、二手车买卖、二手交易、教育培训、同城交友等一站式本地生活服务信息平台，同时为中小微商户建立全方位的精准营销解决方案。
+                <textarea cols="80" rows="5" readonly="true" style="border: 0px;" id="dg_info">
                 </textarea>
         </div>
-        <div class="imgtab">
-            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">
-            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">
-            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">
-            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">
-            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">
+        <!--        <div class="imgtab">-->
+        <!--            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">-->
+        <!--            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">-->
+        <!--            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">-->
+        <!--            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">-->
+        <!--            <img src="./images/tx.jpg" alt="" style="width: 100px;height: 100px;">-->
 
-        </div>
+        <!--        </div>-->
     </div>
 </div>
 <!--服务商信息修改界面-->
 <div id="editdg">
     <div align="center" style="margin-top: 30px">
-        <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%" data-options="label:'服务商名称:'" value=""/>
+        <div style="margin-bottom:20px; display: none;">
+            <input class="easyui-textbox" style="width:50%" data-options="label:'服务商id:'" id="id" value=""
+                   type="hidden"/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%" data-options="label:'公司地址:'" value=""/>
+            <input class="easyui-textbox" style="width:50%" data-options="label:'服务商名称:'" id="name" value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%" data-options="label:'公司电话:'" value=""/>
+            <input class="easyui-textbox" style="width:50%" data-options="label:'公司地址:'" id="address" value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%;" data-options="label:'联系人:'" value=""/>
+            <input class="easyui-textbox" style="width:50%" data-options="label:'公司电话:'" id="phone" value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%;" data-options="label:'规模:'" value=""/>
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'联系人:'" id="linkman" value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%;" data-options="label:'服务商类型:'" value=""/>
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'规模:'" id="scale" value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%;" data-options="label:'注册时间:'" value=""/>
+            <input class="easyui-combobox" style="width:50%;"
+                   data-options="label:'服务商类型:',
+                          valueField:'id',
+                          textField:'text',
+                          data:[{id:1, text:'生活'}, {id:2, text:'商务'}]"
+                   id="type"/>
         </div>
         <div style="margin-bottom:20px">
-            <input class="easyui-textbox" style="width:50%;" data-options="label:'GPS坐标:'" value=""/>
+            <input class="easyui-datebox" style="width:50%;"
+                   data-options="label:'注册时间:',formatter:myFormatter,parser:myParser"
+                   id="createdate" value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <textarea cols="80" rows="5"></textarea>
+            <input class="easyui-textbox" style="width:50%;" data-options="label:'GPS坐标:'" id="gps" value=""/>
         </div>
         <div style="margin-bottom:20px">
-            <input type="file" multiple="multiple"/>
+            <textarea cols="80" rows="5" id="info"></textarea>
+        </div>
+        <!--        <div style="margin-bottom:20px">-->
+        <!--            <input type="file" multiple="multiple"/>-->
+        <!--        </div>-->
+        <div style="margin-bottom:20px">
+            <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'"
+               onclick="submitModification()">确认修改</a>
         </div>
     </div>
 </div>

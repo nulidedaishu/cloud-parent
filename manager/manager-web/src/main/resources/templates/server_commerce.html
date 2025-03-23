@@ -28,7 +28,7 @@
                             }
                         },
                         {field: 'linkman', title: '联系人', width: 100, align: 'center'},
-                        {field: 'phone', title: '公司电话', width: 200, align: 'center'},
+                        {field: 'phone', title: '公司电话', width: 125, align: 'center'},
                         {
                             field: 'zzh',
                             title: '平台子账号',
@@ -47,7 +47,7 @@
                                 return row.member ? row.member.level : '-';
                             }
                         },
-                        {field: 'joindate', title: '入驻时间', width: 200, align: 'center'},
+                        {field: 'joindate', title: '入驻时间', width: 150, align: 'center'},
                         {
                             field: 'flag',
                             title: '状态',
@@ -190,7 +190,7 @@
             const row = $('#commpanylist').datagrid('getSelected');
             if (row && row.id) {
                 $.ajax({
-                    url: '/manager/serverCompany/updateServerCompanyFlag0',
+                    url: '/manager/serverCompany/disableServerCompany',
                     method: 'POST',
                     data: {id: row.id},
                     success: function (response) {
@@ -210,7 +210,7 @@
             const row = $('#commpanylist').datagrid('getSelected');
             if (row && row.id) {
                 $.ajax({
-                    url: '/manager/serverCompany/updateServerCompanyFlag1',
+                    url: '/manager/serverCompany/enableServerCompany',
                     method: 'POST',
                     data: {id: row.id},
                     success: function (response) {

@@ -5,6 +5,33 @@ import java.util.Date;
 public class Examine implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Override
+    public String toString() {
+        return "Examine{" +
+                "user=" + user +
+                ", id=" + id +
+                ", title='" + title + '\'' +
+                ", name='" + name + '\'' +
+                ", typeid=" + typeid +
+                ", createdate=" + createdate +
+                ", linkman='" + linkman + '\'' +
+                ", phone='" + phone + '\'' +
+                ", userid=" + userid +
+                ", commpanycreatedate=" + commpanycreatedate +
+                ", address='" + address + '\'' +
+                ", scale='" + scale + '\'' +
+                ", gps='" + gps + '\'' +
+                ", examinetype=" + examinetype +
+                ", flag=" + flag +
+                ", servertype='" + servertype + '\'' +
+                ", serverarea='" + serverarea + '\'' +
+                ", info='" + info + '\'' +
+                ", commpanyid=" + commpanyid +
+                ", examineInfo='" + examineInfo + '\'' +
+                ", price=" + price +
+                '}';
+    }
+
     private User user;
     
     private Integer id;

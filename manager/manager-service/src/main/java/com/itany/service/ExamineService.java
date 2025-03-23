@@ -5,6 +5,7 @@ import com.itany.entity.Examine;
 import com.itany.exception.RequestParameterErrorException;
 import com.itany.exception.ServerCompanyExistException;
 import com.itany.exception.ServiceException;
+import com.itany.exception.UserCompanyExistException;
 
 public interface ExamineService {
 
@@ -21,5 +22,5 @@ public interface ExamineService {
     /**
      * 审核方法
      */
-    void updateExamine(Examine examine) throws RequestParameterErrorException, ServiceException, ServerCompanyExistException;
+    void updateExamine(Examine examine) throws RequestParameterErrorException, ServiceException, ServerCompanyExistException, UserCompanyExistException;
 }

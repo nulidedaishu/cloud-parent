@@ -6,6 +6,7 @@ import com.itany.entity.ServerCompany;
 import com.itany.exception.RequestParameterErrorException;
 import com.itany.exception.ServerCompanyExistException;
 import com.itany.exception.ServiceException;
+import com.itany.exception.UserCompanyExistException;
 
 public interface ServerCompanyService {
 
@@ -17,7 +18,7 @@ public interface ServerCompanyService {
     /**
      * 查询单服务商方法
      */
-    ServerCompany selectServerCompanyById(String id) throws RequestParameterErrorException;
+    ServerCompany selectServerCompanyById(ServerCompany serverCompany) throws RequestParameterErrorException;
 
     /**
      * 修改服务商方法
@@ -27,15 +28,15 @@ public interface ServerCompanyService {
     /**
      * 禁用服务商状态方法
      */
-    void updateServerCompanyFlag0(String id) throws RequestParameterErrorException;
+    void disableServerCompany(ServerCompany serverCompany) throws RequestParameterErrorException;
 
     /**
      * 启用服务商状态方法
      */
-    void updateServerCompanyFlag1(String id) throws RequestParameterErrorException;
+    void enableServerCompany(ServerCompany serverCompany) throws RequestParameterErrorException;
 
     /**
      * 添加服务商方法
      */
-    void addServerCompany(Examine examine) throws RequestParameterErrorException, ServiceException, ServerCompanyExistException;
+    void addServerCompany(Examine examine) throws RequestParameterErrorException, ServiceException, ServerCompanyExistException, UserCompanyExistException;
 }

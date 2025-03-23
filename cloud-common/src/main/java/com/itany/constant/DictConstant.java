@@ -2,30 +2,55 @@ package com.itany.constant;
 
 public interface DictConstant {
     /**
-     * 用户
+     * 用户分页
      */
     String USER_DEFAULT_NO = "1";
     String USER_DEFAULT_PAGE = "10";
     /**
-     * 生活服务商
+     * 生活服务商分页
      */
-    String SERVERCOMPANYLIFE_DEFAULT_NO = "1";
-    String SERVERCOMPANYLIFE_DEFAULT_PAGE = "10";
+    String SERVER_LIFE_DEFAULT_NO = "1";
+    String SERVER_LIFE_DEFAULT_PAGE = "10";
     /**
-     * 商务服务商
+     * 商务服务商分页
      */
-    String SERVERCOMPANYCOMMERCE_DEFAULT_NO = "1";
-    String SERVERCOMPANYCOMMERCE_DEFAULT_PAGE = "10";
+    String SERVER_COMMERCE_DEFAULT_NO = "1";
+    String SERVER_COMMERCE_DEFAULT_PAGE = "10";
     /**
-     * 服务商审核
+     * 服务商审核分页
      */
-    String COMPANYEXAMINE_DEFAULT_NO = "1";
-    String COMPANYEXAMINE_DEFAULT_PAGE = "10";
+    String COMPANY_EXAMINE_DEFAULT_NO = "1";
+    String COMPANY_EXAMINE_DEFAULT_PAGE = "10";
     /**
-     * 服务审核
+     * 服务审核分页
      */
-    String SERVEREXAMINE_DEFAULT_NO = "1";
-    String SERVEREXAMINE_DEFAULT_PAGE = "10";
+    String SERVER_EXAMINE_DEFAULT_NO = "1";
+    String SERVER_EXAMINE_DEFAULT_PAGE = "10";
+
+    /**
+     * 用户启用
+     */
+    Integer USER_ENABLED=1;
+    /**
+     * 用户禁用
+     */
+    Integer USER_DISABLED=0;
+    /**
+     * 服务商启用
+     */
+    Integer COMPANY_ENABLED=1;
+    /**
+     * 服务商禁用
+     */
+    Integer COMPANY_DISABLED=0;
+    /**
+     * 服务启用
+     */
+    Integer SERVER_ENABLED=1;
+    /**
+     * 服务禁用
+     */
+    Integer SERVER_DISABLED=0;
 
 
     /**
@@ -44,10 +69,11 @@ public interface DictConstant {
      * 服务审核种类
      */
     Integer SERVER_EXAMINE = 2;
+
     /**
      * 审核成功
      */
-    Integer EXAMINE_SUCCESS=1;
+    int EXAMINE_SUCCESS=1;
     /**
      * 未审核
      */
@@ -55,5 +81,5 @@ public interface DictConstant {
     /**
      * 审核失败
      */
-    Integer EXAMINE_FAIL=-1;
+    int EXAMINE_FAIL=-1;
 }

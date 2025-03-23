@@ -6,6 +6,7 @@ import com.itany.constant.DictConstant;
 import com.itany.entity.Examine;
 import com.itany.exception.RequestParameterErrorException;
 import com.itany.exception.ServiceException;
+import com.itany.exception.UserCompanyExistException;
 import com.itany.service.ExamineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,16 +30,16 @@ public class ExamineListController {
         return "commpany_examinelist";
     }
 
-    @RequestMapping("/showServer")
-    public String showServer() {
-        return "server_examinelist";
-    }
+//    @RequestMapping("/showServer")
+//    public String showServer() {
+//        return "server_examinelist";
+//    }
 
     @RequestMapping("/selectAllCompany")
     @ResponseBody
     public Map<String, Object> selectAllCompany(
-            @RequestParam(defaultValue = DictConstant.COMPANYEXAMINE_DEFAULT_NO) String page,
-            @RequestParam(defaultValue = DictConstant.COMPANYEXAMINE_DEFAULT_PAGE) String rows,
+            @RequestParam(defaultValue = DictConstant.COMPANY_EXAMINE_DEFAULT_NO) String page,
+            @RequestParam(defaultValue = DictConstant.COMPANY_EXAMINE_DEFAULT_PAGE) String rows,
             @ModelAttribute Examine examine) {
         examine.setExaminetype(DictConstant.COMPANY_EXAMINE);
         Map<String, Object> result = new HashMap<>();
@@ -56,8 +57,8 @@ public class ExamineListController {
     @RequestMapping("/selectAllServer")
     @ResponseBody
     public Map<String, Object> selectAllServer(
-            @RequestParam(defaultValue = DictConstant.COMPANYEXAMINE_DEFAULT_NO) String page,
-            @RequestParam(defaultValue = DictConstant.COMPANYEXAMINE_DEFAULT_PAGE) String rows,
+            @RequestParam(defaultValue = DictConstant.COMPANY_EXAMINE_DEFAULT_NO) String page,
+            @RequestParam(defaultValue = DictConstant.COMPANY_EXAMINE_DEFAULT_PAGE) String rows,
             @ModelAttribute Examine examine) {
         examine.setExaminetype(DictConstant.SERVER_EXAMINE);
         Map<String, Object> result = new HashMap<>();
@@ -100,6 +101,10 @@ public class ExamineListController {
             result.put("success", true);
             result.put("message", "修改成功");
         } catch (RequestParameterErrorException e) {
+            e.printStackTrace();
+            result.put("success", false);
+            result.put("message", "修改失败，" + e.getMessage());
+        } catch (UserCompanyExistException e) {
             result.put("success", false);
             result.put("message", "修改失败，" + e.getMessage());
         } catch (Exception e) {
