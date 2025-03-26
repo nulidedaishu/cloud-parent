@@ -16,7 +16,7 @@ public interface ServerCompanyService {
     PageInfo<ServerCompany> selectServerLife(String page, String rows, ServerCompany serverCompany, String level) throws ServiceException;
 
     /**
-     * 查询单服务商方法
+     * 查询单个服务商方法
      */
     ServerCompany selectServerCompanyById(ServerCompany serverCompany) throws RequestParameterErrorException;
 

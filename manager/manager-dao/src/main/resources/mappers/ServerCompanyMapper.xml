@@ -34,7 +34,7 @@
         <result column="type" property="type"/>
         <result column="linkman" property="linkman"/>
         <result column="phone" property="phone"/>
-        <association property="userStats" javaType="com.itany.vo.UserStats">
+        <association property="userStats" javaType="com.itany.dto.UserStats">
             <result column="user_count" property="count"/>
         </association>
         <association property="member" javaType="com.itany.entity.Member">

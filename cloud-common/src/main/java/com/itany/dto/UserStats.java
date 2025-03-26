@@ -1,4 +1,4 @@
-package com.itany.vo;
+package com.itany.dto;
 
 public class UserStats {
     private Integer count;

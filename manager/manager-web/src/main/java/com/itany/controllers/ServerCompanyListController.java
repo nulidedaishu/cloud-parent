@@ -19,7 +19,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/serverCompany")
-public class ServerCompanyController {
+public class ServerCompanyListController {
 
     @Autowired
     private ServerCompanyService serverCompanyService;
@@ -37,8 +37,8 @@ public class ServerCompanyController {
     @RequestMapping("/selectAllLife")
     @ResponseBody
     public Map<String, Object> selectServerLife(
-            @RequestParam(defaultValue = DictConstant.SERVER_LIFE_DEFAULT_NO) String page,
-            @RequestParam(defaultValue = DictConstant.SERVER_LIFE_DEFAULT_PAGE) String rows,
+            @RequestParam(defaultValue = DictConstant.COMPANY_LIFE_DEFAULT_NO) String page,
+            @RequestParam(defaultValue = DictConstant.COMPANY_LIFE_DEFAULT_PAGE) String rows,
             @ModelAttribute ServerCompany serverCompany,
             @RequestParam(required = false) String level) {
         serverCompany.setType(DictConstant.SERVER_LIFE);
@@ -57,8 +57,8 @@ public class ServerCompanyController {
     @RequestMapping("/selectAllCommerce")
     @ResponseBody
     public Map<String, Object> selectServerCommerce(
-            @RequestParam(defaultValue = DictConstant.SERVER_COMMERCE_DEFAULT_NO) String page,
-            @RequestParam(defaultValue = DictConstant.SERVER_COMMERCE_DEFAULT_PAGE) String rows,
+            @RequestParam(defaultValue = DictConstant.COMPANY_COMMERCE_DEFAULT_NO) String page,
+            @RequestParam(defaultValue = DictConstant.COMPANY_COMMERCE_DEFAULT_PAGE) String rows,
             @ModelAttribute ServerCompany serverCompany,
             @RequestParam(required = false) String level) {
         serverCompany.setType(DictConstant.SERVER_COMMERCE);

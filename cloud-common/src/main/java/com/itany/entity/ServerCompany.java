@@ -1,69 +1,19 @@
 package com.itany.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.itany.vo.UserStats;
+import com.itany.dto.UserStats;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.text.SimpleDateFormat;
+import java.io.Serializable;
 import java.util.Date;
 
-public class ServerCompany {
+public class ServerCompany implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private User user;
-    private MemberCompany memberCompany;
+    //    private User user;
+//    private MemberCompany memberCompany;
     private Member member;
     private UserStats userStats;
-
-    public UserStats getUserStats() {
-        return userStats;
-    }
-
-    public void setUserStats(UserStats userStats) {
-        this.userStats = userStats;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public MemberCompany getMemberCompany() {
-        return memberCompany;
-    }
-
-    public void setMemberCompany(MemberCompany memberCompany) {
-        this.memberCompany = memberCompany;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
-    @Override
-    public String toString() {
-        return "ServerCompany{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", info='" + info + '\'' +
-                ", address='" + address + '\'' +
-                ", gps='" + gps + '\'' +
-                ", scale='" + scale + '\'' +
-                ", createdate=" + createdate +
-                ", joindate=" + joindate +
-                ", flag=" + flag +
-                ", type=" + type +
-                ", linkman='" + linkman + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
-    }
 
     private Integer id;
 
@@ -141,7 +91,6 @@ public class ServerCompany {
         this.scale = scale == null ? null : scale.trim();
     }
 
-
     public Date getCreatedate() {
         return createdate;
     }
@@ -188,5 +137,41 @@ public class ServerCompany {
 
     public void setPhone(String phone) {
         this.phone = phone == null ? null : phone.trim();
+    }
+
+    public UserStats getUserStats() {
+        return userStats;
+    }
+
+    public void setUserStats(UserStats userStats) {
+        this.userStats = userStats;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    @Override
+    public String toString() {
+        return "ServerCompany{" +
+                "member=" + member +
+                ", userStats=" + userStats +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", info='" + info + '\'' +
+                ", address='" + address + '\'' +
+                ", gps='" + gps + '\'' +
+                ", scale='" + scale + '\'' +
+                ", createdate=" + createdate +
+                ", joindate=" + joindate +
+                ", flag=" + flag +
+                ", type=" + type +
+                ", linkman='" + linkman + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
     }
 }

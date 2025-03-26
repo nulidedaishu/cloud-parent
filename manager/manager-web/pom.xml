@@ -58,5 +58,9 @@
             <artifactId>alipay-sdk-java</artifactId>
             <version>4.8.73.ALL</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
     </dependencies>
 </project>

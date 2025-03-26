@@ -9,23 +9,29 @@ public interface DictConstant {
     /**
      * 生活服务商分页
      */
-    String SERVER_LIFE_DEFAULT_NO = "1";
-    String SERVER_LIFE_DEFAULT_PAGE = "10";
+    String COMPANY_LIFE_DEFAULT_NO = "1";
+    String COMPANY_LIFE_DEFAULT_PAGE = "10";
     /**
      * 商务服务商分页
      */
-    String SERVER_COMMERCE_DEFAULT_NO = "1";
-    String SERVER_COMMERCE_DEFAULT_PAGE = "10";
+    String COMPANY_COMMERCE_DEFAULT_NO = "1";
+    String COMPANY_COMMERCE_DEFAULT_PAGE = "10";
+    /**
+     * 服务分页
+     */
+    String SERVER_INFO_DEFAULT_NO = "1";
+    String SERVER_INFO_DEFAULT_PAGE = "10";
     /**
      * 服务商审核分页
      */
-    String COMPANY_EXAMINE_DEFAULT_NO = "1";
-    String COMPANY_EXAMINE_DEFAULT_PAGE = "10";
+    String EXAMINE_COMPANY_DEFAULT_NO = "1";
+    String EXAMINE_COMPANY_DEFAULT_PAGE = "10";
     /**
      * 服务审核分页
      */
-    String SERVER_EXAMINE_DEFAULT_NO = "1";
-    String SERVER_EXAMINE_DEFAULT_PAGE = "10";
+    String EXAMINE_SERVER_DEFAULT_NO = "1";
+    String EXAMINE_SERVER_DEFAULT_PAGE = "10";
+
 
     /**
      * 用户启用
@@ -44,11 +50,11 @@ public interface DictConstant {
      */
     Integer COMPANY_DISABLED=0;
     /**
-     * 服务启用
+     * 服务上线
      */
     Integer SERVER_ENABLED=1;
     /**
-     * 服务禁用
+     * 服务下线
      */
     Integer SERVER_DISABLED=0;
 

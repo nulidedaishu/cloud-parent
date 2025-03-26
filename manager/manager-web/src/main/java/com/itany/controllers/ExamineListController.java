@@ -38,8 +38,8 @@ public class ExamineListController {
     @RequestMapping("/selectAllCompany")
     @ResponseBody
     public Map<String, Object> selectAllCompany(
-            @RequestParam(defaultValue = DictConstant.COMPANY_EXAMINE_DEFAULT_NO) String page,
-            @RequestParam(defaultValue = DictConstant.COMPANY_EXAMINE_DEFAULT_PAGE) String rows,
+            @RequestParam(defaultValue = DictConstant.EXAMINE_COMPANY_DEFAULT_NO) String page,
+            @RequestParam(defaultValue = DictConstant.EXAMINE_COMPANY_DEFAULT_PAGE) String rows,
             @ModelAttribute Examine examine) {
         examine.setExaminetype(DictConstant.COMPANY_EXAMINE);
         Map<String, Object> result = new HashMap<>();
@@ -57,8 +57,8 @@ public class ExamineListController {
     @RequestMapping("/selectAllServer")
     @ResponseBody
     public Map<String, Object> selectAllServer(
-            @RequestParam(defaultValue = DictConstant.COMPANY_EXAMINE_DEFAULT_NO) String page,
-            @RequestParam(defaultValue = DictConstant.COMPANY_EXAMINE_DEFAULT_PAGE) String rows,
+            @RequestParam(defaultValue = DictConstant.EXAMINE_SERVER_DEFAULT_NO) String page,
+            @RequestParam(defaultValue = DictConstant.EXAMINE_SERVER_DEFAULT_PAGE) String rows,
             @ModelAttribute Examine examine) {
         examine.setExaminetype(DictConstant.SERVER_EXAMINE);
         Map<String, Object> result = new HashMap<>();
